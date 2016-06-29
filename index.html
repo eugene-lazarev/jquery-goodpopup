@@ -92,7 +92,7 @@
 
     <script>
         $(function() {
-            $(".js-button").on("click", function() {
+            $(document).on("click", ".js-button", function() {
                 $.popup($(this).data("popupContent")).updateOptions({
                     callbackBeforeShow: function() {
                         //alert('callbackBeforeShow');
