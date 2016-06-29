@@ -28,7 +28,7 @@
             color: #403809;
             text-shadow: 0 1px 0 #fffa47;
             padding: 0.35em 0.75em 0.4em;
-            margin: 2em 0;
+            margin: 2em 1em;
             border-radius: 0.2em;
             cursor: pointer;
             transition: background 0.2s;
@@ -88,14 +88,24 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-    <script src="src/js/script.js"></script>
+    <script src="build/js/script.min.js"></script>
 
     <script>
         $(function() {
             $(".js-button").on("click", function() {
                 $.popup($(this).data("popupContent")).updateOptions({
-                    callbackAfterOpen: function() {
+                    callbackBeforeShow: function() {
+                        //alert('callbackBeforeShow');
+                    },
+                    callbackAfterShow: function() {
+                        //alert('callbackAfterShow');
                         this.getPopupContent().find("input").focus();
+                    },
+                    callbackBeforeHide: function() {
+                        //alert('callbackBeforeHide');
+                    },
+                    callbackAfterHide: function() {
+                        //alert('callbackAfterHide');
                     }
                 });
                 $.popup($(this).data("popupContent")).show();

@@ -53,8 +53,8 @@
     };
 
     $.fn.popup.defaults = {
-        callbackBeforeOpen: function() {},
-        callbackAfterOpen: function() {},
+        callbackBeforeShow: function() {},
+        callbackAfterShow: function() {},
         callbackBeforeHide: function() {},
         callbackAfterHide: function() {},
 
@@ -99,7 +99,7 @@
                 }
             });
 
-            options.callbackBeforeOpen.call(self);
+            options.callbackBeforeShow.call(self);
 
             if (options.isDetachable) {
                 if (typeof $popup_content === "undefined") {
@@ -119,7 +119,7 @@
                 $popup.addClass(popup_active_modificator);
                 is_visible = true;
 
-                options.callbackAfterOpen.call(self);
+                options.callbackAfterShow.call(self);
             });
 
             return this;
