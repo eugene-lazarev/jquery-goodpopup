@@ -57,11 +57,13 @@ html.noscroll body {
     margin: 50px 0;
     max-width: 90%;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transform: scale(0.7);
+    transition: none;
 }
 .popup_visible .popup-inner-content {
     opacity: 1;
-    transition: opacity 0.35s ease;
+    transform: scale(1);
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
 .popup__close {
     position: absolute;
