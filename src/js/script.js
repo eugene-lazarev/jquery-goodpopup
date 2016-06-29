@@ -58,7 +58,8 @@
         callbackBeforeHide: function() {},
         callbackAfterHide: function() {},
 
-        isDetachable: false
+        isDetachable: false,
+        isOuterClickClosing: true
     };
 
     function Popup($template, options_set) {
@@ -75,6 +76,12 @@
         /* Helpers */
         function handleKeydown(event) {
             if (event.keyCode === 27) {
+                self.hide.call(self);
+            }
+        }
+
+        function handleOuterClick(event) {
+            if (options.isOuterClickClosing && $(event.target).parents(".js-popup-inner-content").length === 0) {
                 self.hide.call(self);
             }
         }
@@ -106,6 +113,7 @@
                 $popup_close = $popup.find(popup_close_selector);
 
                 $(document).on("keydown." + plugin_suffix, handleKeydown);
+                $popup.on("click." + plugin_suffix, handleOuterClick);
                 $popup_close.on("click." + plugin_suffix, self.hide);
 
                 $popup.addClass(popup_active_modificator);
@@ -125,6 +133,7 @@
             options.callbackBeforeHide.call(self);
 
             $popup_close.off("click." + plugin_suffix);
+            $popup.off("click." + plugin_suffix);
             $(document).off("keydown." + plugin_suffix);
 
             $popup.removeClass(popup_active_modificator);
