@@ -34,10 +34,11 @@ $.goodpopup("goodpopup1").hide()
 ```
 
 ## API
-Экземпляр попапа (далее `popup_instance`) можно получить двумя способами:
+Экземпляр попапа (далее `popup_instance`) можно получить тремя способами:
 
-1. Обратиться к `data-popup` у DOM-элемента handlebars-шаблона (т.е. тега `<script>` с нужным `id`);
-2. Посмотреть в `$.goodpopup.getPopups()`.
+1. Взять напрямую по имени: `$.goodpopup("goodpopup1")`;
+2. Обратиться к `data-popup` у DOM-элемента handlebars-шаблона (т.е. тега `<script>` с нужным `id`);
+3. Посмотреть в `$.goodpopup.getPopups()`.
 
 ### Опции
 Могут быть установлены тремя способами:
