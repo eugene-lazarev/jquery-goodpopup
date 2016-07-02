@@ -18,7 +18,7 @@ jQuery-плагин с хорошей разметкой попапа.
 ## Использование
 Добавьте в конец страницы шаблон handlebars, содержащий *внутреннюю* разметку попапа, используя уникальный `id`:
 ```html
-<script id="goodpopup" type="text/x-handlebars-template">
+<script id="goodpopup1" type="text/x-handlebars-template">
     <div>
         <h1>Hello world</h1>
     </div>
@@ -26,25 +26,25 @@ jQuery-плагин с хорошей разметкой попапа.
 ```
 В любой момент покажите попап, используя `id` шаблона:
 ```javascript
-$.popup("goodpopup").show()
+$.goodpopup("goodpopup1").show()
 ```
 А потом скройте:
 ```javascript
-$.popup("goodpopup").hide()
+$.goodpopup("goodpopup1").hide()
 ```
 
 ## API
 Экземпляр попапа (далее `popup_instance`) можно получить двумя способами:
 
 1. Обратиться к `data-popup` у DOM-элемента handlebars-шаблона (т.е. тега `<script>` с нужным `id`);
-2. Посмотреть в `$.popup.getPopups()`.
+2. Посмотреть в `$.goodpopup.getPopups()`.
 
 ### Опции
 Могут быть установлены тремя способами:
 
 1. Через data-атрибуты у шаблона (т.е. тега `<script>`);
 2. Через метод `updateOptions` (см. ниже);
-3. При ручной инициализации попапа: `$("script[type='text/x-handlebars-template']").popup({})`.
+3. При ручной инициализации попапа: `$("script[type='text/x-handlebars-template']").goodpopup({})`.
 
 #### `isDetachable`
 Тип: `boolean`  

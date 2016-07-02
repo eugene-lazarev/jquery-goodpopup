@@ -70,18 +70,18 @@
     </style>
 </head>
 <body>
-    <div class="button js-button" data-popup-content="popup1">detachable popup</div>
-    <div class="button js-button" data-popup-content="popup2">non-detachable popup</div>
+    <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
+    <div class="button js-button" data-popup-content="goodpopup2">non-detachable popup</div>
 
-    <script id="popup1" type="text/x-handlebars-template" data-is-detachable="true">
+    <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
         <div class="demo">
-            <h1 class="demo-header">detachable popup</h1>
+            <h1 class="demo-header">detachable goodpopup</h1>
             <input type="text" class="demo-input"/>
         </div>
     </script>
-    <script id="popup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
+    <script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
         <div class="demo">
-            <h1 class="demo-header">non-detachable popup</h1>
+            <h1 class="demo-header">non-detachable goodpopup</h1>
             <input type="text" class="demo-input"/>
         </div>
     </script>
@@ -93,7 +93,7 @@
     <script>
         $(function() {
             $(document).on("click", ".js-button", function() {
-                $.popup($(this).data("popupContent")).updateOptions({
+                $.goodpopup($(this).data("popupContent")).updateOptions({
                     callbackBeforeShow: function() {
                         //alert('callbackBeforeShow');
                     },
@@ -108,7 +108,7 @@
                         //alert('callbackAfterHide');
                     }
                 });
-                $.popup($(this).data("popupContent")).show();
+                $.goodpopup($(this).data("popupContent")).show();
             });
         });
     </script>

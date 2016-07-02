@@ -1,12 +1,12 @@
 (function($) {
     "use strict";
 
-    var plugin_suffix = "popup";
+    var plugin_suffix = "goodpopup";
 
-    var popup_selector = ".js-popup";
-    var popup_inner_selector = ".js-popup-inner-content";
-    var popup_close_selector = ".js-popup__close";
-    var popup_active_modificator = "popup_visible";
+    var popup_selector = ".js-goodpopup";
+    var popup_inner_selector = ".js-goodpopup-inner-content";
+    var popup_close_selector = ".js-goodpopup__close";
+    var popup_active_modificator = "goodpopup_visible";
 
     var $popup;
     var $popup_inner;
@@ -43,7 +43,7 @@
     }
 
     function createPopupDOM() {
-        var popup_html = '<div class="popup js-popup"><div class="popup-inner"><div class="popup-inner-content js-popup-inner-content"></div></div></div>';
+        var popup_html = '<div class="goodpopup js-goodpopup"><div class="goodpopup-inner"><div class="goodpopup-inner-content js-goodpopup-inner-content"></div></div></div>';
 
         return $(popup_html).appendTo("body").promise().done(function() {
             $popup = $(popup_selector);
@@ -52,24 +52,24 @@
     }
 
     function renderPopupContentDOM(template_html, template_data) {
-        return '<div>' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="popup__close js-popup__close"></span>' + '</div>';
+        return '<div>' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="goodpopup__close js-goodpopup__close"></span>' + '</div>';
     }
 
-    $.fn.popup = function(options) {
+    $.fn.goodpopup = function(options) {
         return this.each(function(i, element) {
             var $this = $(element),
                 this_id = $this.attr("id"),
                 PopupInstance = popups_list[this_id];
 
             if (typeof PopupInstance === "undefined") {
-                popups_list[this_id] = new Popup($this, $.extend({}, $.fn.popup.defaults, options, $this.data()));
+                popups_list[this_id] = new GoodPopup($this, $.extend({}, $.fn.goodpopup.defaults, options, $this.data()));
             } else {
                 PopupInstance.updateOptions(options);
             }
         });
     };
 
-    $.fn.popup.defaults = {
+    $.fn.goodpopup.defaults = {
         callbackBeforeShow: function() {},
         callbackAfterShow: function() {},
         callbackBeforeHide: function() {},
@@ -79,7 +79,7 @@
         isOuterClickClosing: true
     };
 
-    function Popup($template, options_set) {
+    function GoodPopup($template, options_set) {
         var self = this;
         var template_html = $template.html();
         var options = options_set;
@@ -98,7 +98,7 @@
         }
 
         function handleOuterClick(event) {
-            if (options.isOuterClickClosing && $(event.target).parents(".js-popup-inner-content").length === 0) {
+            if (options.isOuterClickClosing && $(event.target).parents(".js-goodpopup-inner-content").length === 0) {
                 self.hide.call(self);
             }
         }
@@ -188,12 +188,12 @@
 
 
         /* Set data to DOM element (template script) */
-        $template.data("popup", this);
+        $template.data("goodpopup", this);
 
         return this;
     }
 
-    $.popup = function(popup_name) {
+    $.goodpopup = function(popup_name) {
         if (typeof popups_list[popup_name] !== "undefined") {
             return popups_list[popup_name];
         } else {
@@ -203,14 +203,14 @@
         return this;
     };
 
-    $.popup.getPopups = function() {
+    $.goodpopup.getPopups = function() {
         return popups_list;
     };
 
 
     /* Init */
     var initPopupTemplates = function() {
-        $("script[type='text/x-handlebars-template']").popup();
+        $("script[type='text/x-handlebars-template']").goodpopup();
     };
 
     createPopupDOM().done(initPopupTemplates);
