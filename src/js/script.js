@@ -14,14 +14,31 @@
     var popups_list = {};
 
     function throwError(popup_name, error_type) {
+        function showError(text) {
+            if (typeof console !== "undefined" && typeof console.error === "function") {
+                console.error(text);
+            } else {
+                alert(text);
+            }
+        }
+
+        function showTrace(text) {
+            if (typeof console !== "undefined" && typeof console.trace === "function") {
+                console.trace(text);
+            } else {
+                alert(text);
+            }
+        }
+
         switch(error_type) {
             case "NOT_FOUND":
-                console.error("Popup template `" + popup_name + "` was not inited yet");
+                showError("Popup template `" + popup_name + "` was not inited yet");
                 break;
             default:
-                console.trace("Problem with popup");
+                showTrace("Problem with popup");
                 break;
         }
+
         return false;
     }
 
@@ -34,7 +51,7 @@
         });
     }
 
-    function makePopupContentDOM(template_html, template_data) {
+    function renderPopupContentDOM(template_html, template_data) {
         return '<div>' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="popup__close js-popup__close"></span>' + '</div>';
     }
 
@@ -103,10 +120,10 @@
 
             if (options.isDetachable) {
                 if (typeof $popup_content === "undefined") {
-                    $popup_content = $(makePopupContentDOM(template_html));
+                    $popup_content = $(renderPopupContentDOM(template_html));
                 }
             } else {
-                $popup_content = $(makePopupContentDOM(template_html));
+                $popup_content = $(renderPopupContentDOM(template_html));
             }
 
             $popup_inner.append($popup_content).promise().done(function() {
@@ -151,14 +168,14 @@
             return this;
         };
 
+        this.isVisible = function() {
+            return is_visible;
+        };
+
         this.updateOptions = function(options_updated) {
             $.extend(options, options_updated);
 
             return this;
-        };
-
-        this.isVisible = function() {
-            return is_visible;
         };
 
         this.getOptions = function() {
@@ -168,6 +185,7 @@
         this.getPopupContent = function() {
             return $popup_content;
         };
+
 
         /* Set data to DOM element (template script) */
         $template.data("popup", this);
