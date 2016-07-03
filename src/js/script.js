@@ -76,7 +76,9 @@
         callbackAfterHide: function() {},
 
         isDetachable: false,
-        isOuterClickClosing: true
+        isOuterClickClosing: true,
+        
+        data: {}
     };
 
     function GoodPopup($template, options_set) {
@@ -120,10 +122,10 @@
 
             if (options.isDetachable) {
                 if (typeof $popup_content === "undefined") {
-                    $popup_content = $(renderPopupContentDOM(template_html));
+                    $popup_content = $(renderPopupContentDOM(template_html, options.data));
                 }
             } else {
-                $popup_content = $(renderPopupContentDOM(template_html));
+                $popup_content = $(renderPopupContentDOM(template_html, options.data));
             }
 
             $popup_inner.append($popup_content).promise().done(function() {

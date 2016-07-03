@@ -75,13 +75,13 @@
 
     <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
         <div class="demo">
-            <h1 class="demo-header">detachable goodpopup</h1>
+            <h1 class="demo-header">{{name}}</h1>
             <input type="text" class="demo-input"/>
         </div>
     </script>
     <script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
         <div class="demo">
-            <h1 class="demo-header">non-detachable goodpopup</h1>
+            <h1 class="demo-header">{{name}}</h1>
             <input type="text" class="demo-input"/>
         </div>
     </script>
@@ -93,6 +93,8 @@
     <script>
         $(function() {
             $(document).on("click", ".js-button", function() {
+                var $this = $(this);
+                
                 $.goodpopup($(this).data("popupContent")).updateOptions({
                     callbackBeforeShow: function() {
                         //alert('callbackBeforeShow');
@@ -106,6 +108,10 @@
                     },
                     callbackAfterHide: function() {
                         //alert('callbackAfterHide');
+                    },
+                    
+                    data: {
+                        name: $this.text()
                     }
                 });
                 $.goodpopup($(this).data("popupContent")).show();
