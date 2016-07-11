@@ -70,52 +70,42 @@
     </style>
 </head>
 <body>
-    <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
-    <div class="button js-button" data-popup-content="goodpopup2">non-detachable popup</div>
+<div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
+<div class="button js-button" data-popup-content="goodpopup2">non-detachable popup</div>
 
-    <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
-        <div class="demo">
-            <h1 class="demo-header">{{name}}</h1>
-            <input type="text" class="demo-input"/>
-        </div>
-    </script>
-    <script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
-        <div class="demo">
-            <h1 class="demo-header">{{name}}</h1>
-            <input type="text" class="demo-input"/>
-        </div>
-    </script>
+<script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
+    <div class="demo">
+        <h1 class="demo-header">{{name}}</h1>
+        <input type="text" class="demo-input"/>
+    </div>
+</script>
+<script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
+    <div class="demo">
+        <h1 class="demo-header">{{name}}</h1>
+        <input type="text" class="demo-input"/>
+    </div>
+</script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-    <script src="build/js/script.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="build/js/script.min.js"></script>
 
-    <script>
-        $(function() {
-            $(document).on("click", ".js-button", function() {
-                var $this = $(this);
-                
-                $.goodpopup($(this).data("popupContent")).updateOptions({
-                    callbackBeforeShow: function() {
-                        //alert('callbackBeforeShow');
-                    },
-                    callbackAfterShow: function() {
-                        //alert('callbackAfterShow');
-                        this.getPopupContent().find("input").focus();
-                    },
-                    callbackBeforeHide: function() {
-                        //alert('callbackBeforeHide');
-                    },
-                    callbackAfterHide: function() {
-                        //alert('callbackAfterHide');
-                    },
-                    
-                    data: {
-                        name: $this.text()
-                    }
-                }).show();
-            });
+<script>
+    $(function() {
+        $(document).on("click", ".js-button", function() {
+            var $this = $(this);
+
+            $.goodpopup($this.data("popupContent")).updateOptions({
+                callbackAfterShow: function() {
+                    /* `this` is this instance with all methods and options */
+                    this.getPopupContent().find("input").focus();
+                },
+                data: {
+                    name: $this.text()
+                }
+            }).show();
         });
-    </script>
+    });
+</script>
 </body>
 </html>
