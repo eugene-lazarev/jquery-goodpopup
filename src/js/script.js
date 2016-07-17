@@ -12,6 +12,25 @@
     var $popup_inner;
 
     var popups_list = {};
+    
+    var whichTransitionEvent = (function() {
+        var t;
+        var el = document.createElement("div");
+        var transitions = {
+            "transition": "transitionend",
+            "OTransition": "oTransitionEnd",
+            "MozTransition": "transitionend",
+            "WebkitTransition": "webkitTransitionEnd"
+        };
+
+        for (t in transitions) {
+            if (typeof el.style[t] !== "undefined") {
+                return transitions[t];
+            }
+        }
+        
+        return false;
+    })();
 
     function throwError(popup_name, error_type) {
         function showError(text) {
@@ -148,25 +167,35 @@
             if (!self.isVisible()) {
                 return this;
             }
+            
+            function makeHiding() {
+                if (options.isDetachable) {
+                    $popup_content.detach();
+                } else {
+                    $popup_content.remove();
+                }
+
+                is_visible = false;
+
+                options.callbackAfterHide.call(self);
+            }
 
             options.callbackBeforeHide.call(self);
 
             $popup_close.off("click." + plugin_suffix);
             $popup.off("click." + plugin_suffix);
             $(document).off("keydown." + plugin_suffix);
-
-            $popup.removeClass(popup_active_modificator);
-
-            if (options.isDetachable) {
-                $popup_content.detach();
-            } else {
-                $popup_content.remove();
+            
+            if (whichTransitionEvent) {
+                $popup.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function() {
+                    makeHiding.call(self);
+                });
             }
-
-            is_visible = false;
-
-            options.callbackAfterHide.call(self);
-
+            $popup.removeClass(popup_active_modificator);
+            if (!whichTransitionEvent) {
+                makeHiding();
+            }
+            
             return this;
         };
 
