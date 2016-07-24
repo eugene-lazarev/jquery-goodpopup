@@ -66,6 +66,32 @@ html.noscroll body {
     transform: scale(1);
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
+.goodpopup-inner-content-element {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.goodpopup-inner-content-element_stealed {
+    opacity: 0;
+    transform: scale(0.7);
+}
+.goodpopup-inner-content-element_stealedfull {
+    position: absolute;
+    top: -99999px;
+    left: -9999px;
+    z-index: -1;
+}
+.goodpopup-inner-content-element_pseudostealed {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: none;
+}
+.goodpopup-inner-content_destroyed,
+.goodpopup_visible .goodpopup-inner-content_destroyed {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
 .goodpopup__close {
     position: absolute;
     top: -1.1em;
