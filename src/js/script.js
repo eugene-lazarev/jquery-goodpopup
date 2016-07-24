@@ -116,6 +116,8 @@
 
         isDetachable: false,
         isOuterClickClosing: true,
+
+        keyCodeForClosing: 27,
         
         data: {}
     };
@@ -135,8 +137,19 @@
 
         /* Helpers */
         function handleKeydown(event) {
-            if (event.keyCode === 27) {
-                self.close.call(self, true);
+            var keyForClosing = self.getOptions().keyCodeForClosing;
+            
+            if (typeof keyForClosing === "number") {
+                self.setOptions({
+                    keyCodeForClosing: [keyForClosing]
+                });
+                keyForClosing = self.getOptions().keyCodeForClosing
+            }
+            
+            for (var i = 0; i < keyForClosing.length; i++) {
+                if (event.keyCode === keyForClosing[i]) {
+                    self.close.call(self, true);
+                }
             }
         }
 
@@ -228,16 +241,16 @@
                 $popup_content.addClass(popup_content_pseudostealed_modificator);
             }
 
-            $popup_inner.append($popup_content).promise().done(function () {
+            $popup_inner.append($popup_content).promise().done(function() {
                 $popup_close = $popup_content.find(popup_close_selector);
-
                 $popup_close.on("click." + plugin_suffix, function() {
                     self.close(true);
                 });
 
+                $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
+                $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
+
                 if (!is_open) {
-                    $(document).on("keydown." + plugin_suffix, handleKeydown);
-                    $popup.on("click." + plugin_suffix, handleOuterClick);
                     $popup.addClass(popup_active_modificator);
                     options.callbackAfterOpen.call(self);
 
@@ -247,9 +260,6 @@
                     options.callbackAfterRender.call(self);
                 } else {
                     var makeVisible = function() {
-                        is_rendered = true;
-                        is_open = true;
-
                         options.callbackAfterRender.call(self);
                     };
                     
@@ -262,12 +272,38 @@
                         $popup_content.removeClass(popup_content_pseudostealed_modificator);
                     }, 1);
                     if (!whichTransitionEvent) {
-                        makeVisible();
+                        makeVisible.call(self);
                     }
+
+                    is_rendered = true;
+                    is_open = true;
                 }
             });
 
             return this;
+        };
+        
+        this.rerenderContent = function(afterRerender) {
+            options.callbackBeforeRender.call(this);
+            
+            var $old_popup_content = $popup_content;
+            
+            $popup_close.off("click." + plugin_suffix);
+
+            $popup_content = $(renderPopupContentDOM(template_html, options.data));
+            $popup_content.addClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator);
+
+            $old_popup_content.after($popup_content).promise().done(function() {
+                $old_popup_content.remove();
+
+                $popup_close = $popup_content.find(popup_close_selector);
+                
+                options.callbackAfterRender.call(self);
+                
+                if (typeof afterRerender === "function") {
+                    afterRerender();
+                }
+            });
         };
 
         this.destroyContent = function(with_shell) {
@@ -285,10 +321,6 @@
                         $popup_content.remove();
                     }
 
-                    is_open = false;
-                    is_stealed = false;
-                    is_rendered = false;
-
                     options.callbackAfterDestroy.call(self);
                     options.callbackAfterClose.call(self);
                 };
@@ -304,8 +336,12 @@
                 }
                 $popup.removeClass(popup_active_modificator);
                 if (!whichTransitionEvent) {
-                    destroy();
+                    destroy.call(self);
                 }
+
+                is_open = false;
+                is_stealed = false;
+                is_rendered = false;
             } else {
                 var destroy = function() {
                     if (options.isDetachable) {
@@ -314,16 +350,16 @@
                         $popup_content.remove();
                     }
 
-                    is_stealed = false;
-                    is_rendered = false;
-
                     options.callbackAfterDestroy.call(self);
                 };
 
                 $popup_close.off("click." + plugin_suffix);
                 
                 if (is_stealed) {
-                    destroy();
+                    is_stealed = false;
+                    is_rendered = false;
+
+                    destroy.call(self);
                 } else {
                     if (whichTransitionEvent) {
                         $popup.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function() {
@@ -332,8 +368,11 @@
                     }
                     $popup_content.addClass(popup_inner_destroy_modificator);
                     if (!whichTransitionEvent) {
-                        destroy();
+                        destroy.call(self);
                     }
+
+                    is_stealed = false;
+                    is_rendered = false;
                 }
             }
 
@@ -347,34 +386,50 @@
             return this;
         };
 
-        this.show = function () {
+        this.show = function() {
             if (!is_stealed) {
                 return this;
             }
 
             options.callbackBeforeShow.call(self);
+            
+            function show() {
+                var makeRetrieved = function() {
+                    $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
+                    $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
+                    $popup_close.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
+                        self.close(true);
+                    });
 
-            function makeRetrieved() {
+                    options.callbackAfterShow.call(self);
+                };
+
+                if (whichTransitionEvent) {
+                    $popup_inner.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function() {
+                        makeRetrieved.call(self);
+                    });
+                }
+                $popup_content.removeClass(popup_content_stealedfull_modificator).removeClass(popup_content_stealed_modificator);
+                if (!whichTransitionEvent) {
+                    makeRetrieved.call(self);
+                }
+
                 is_stealed = false;
 
-                options.callbackAfterShow.call(self);
-            }
-
-            if (whichTransitionEvent) {
-                $popup_inner.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function () {
-                    makeRetrieved.call(self);
-                });
-            }
-            $popup_content.removeClass(popup_content_stealedfull_modificator).removeClass(popup_content_stealed_modificator);
-            if (!whichTransitionEvent) {
-                makeRetrieved();
-            }
-
-            for (var i = 0; i < stealed_popups_list.length; i++) {
-                if (stealed_popups_list[i] === this) {
-                    stealed_popups_list.splice(i, 1);
-                    break;
+                for (var i = 0; i < stealed_popups_list.length; i++) {
+                    if (stealed_popups_list[i] === this) {
+                        stealed_popups_list.splice(i, 1);
+                        break;
+                    }
                 }
+            }
+
+            if (!options.isDetachable) {
+                self.rerenderContent.call(self, function() {
+                    show.call(self);
+                });
+            } else {
+                show.call(self);
             }
 
             return this;
@@ -387,12 +442,9 @@
 
             function makeStealed() {
                 $popup_content.addClass(popup_content_stealedfull_modificator);
-                
-                stealed_popups_list.push(this);
-                is_stealed = true;
 
                 options.callbackAfterHide.call(self);
-                
+
                 if (typeof afterHide === "function") {
                     afterHide();
                 }
@@ -400,15 +452,22 @@
 
             options.callbackBeforeHide.call(self);
 
+            $(document).off("keydown." + plugin_suffix);
+            $popup.off("click." + plugin_suffix);
+            $popup_close.off("click." + plugin_suffix);
+
             if (whichTransitionEvent) {
-                $popup_inner.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function () {
+                $popup_inner.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function() {
                     makeStealed.call(self);
                 });
             }
             $popup_content.addClass(popup_content_stealed_modificator);
             if (!whichTransitionEvent) {
-                makeStealed();
+                makeStealed.call(self);
             }
+
+            stealed_popups_list.push(this);
+            is_stealed = true;
 
             return this;
         };

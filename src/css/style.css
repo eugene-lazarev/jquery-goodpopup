@@ -20,7 +20,7 @@ html.noscroll body {
 .goodpopup_visible {
     bottom: 0;
     opacity: 1;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.25s ease;
 }
 .goodpopup:before {
     content: '';
@@ -59,17 +59,17 @@ html.noscroll body {
     max-width: 90%;
     opacity: 0;
     transform: scale(0.7);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .goodpopup_visible .goodpopup-inner-content {
     opacity: 1;
     transform: scale(1);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .goodpopup-inner-content-element {
     opacity: 1;
     transform: scale(1);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .goodpopup-inner-content-element_stealed {
     opacity: 0;
@@ -90,7 +90,7 @@ html.noscroll body {
 .goodpopup_visible .goodpopup-inner-content_destroyed {
     opacity: 0;
     transform: scale(0.7);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .goodpopup__close {
     position: absolute;

@@ -104,8 +104,11 @@
             var $this = $(this);
 
             $.goodpopup($this.data("popupContent")).setOptions({
-                callbackAfterOpen: function() {
+                callbackAfterRender: function() {
                     /* `this` is the instance of `GoodPopup` with all methods and options */
+                    this.getPopupContent().find("input").focus();
+                },
+                callbackAfterShow: function() {
                     this.getPopupContent().find("input").focus();
                 },
                 data: {
