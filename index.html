@@ -72,6 +72,8 @@
 <body>
 <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
 <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
+<div class="button js-button" data-popup-content="goodpopup3">removable2 popup</div>
+<div class="button js-button" data-popup-content="goodpopup4">removable3 popup</div>
 
 <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
     <div class="demo">
@@ -81,6 +83,20 @@
     </div>
 </script>
 <script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
+    <div class="demo">
+        <h1 class="demo-header">{{name}}</h1>
+        <input type="text" class="demo-input"/><br/>
+        <div class="button js-button" data-popup-content="goodpopup3">removable2 popup</div>
+    </div>
+</script>
+<script id="goodpopup3" type="text/x-handlebars-template" data-is-outer-click-closing="false">
+    <div class="demo">
+        <h1 class="demo-header">{{name}}</h1>
+        <input type="text" class="demo-input"/><br/>
+        <div class="button js-button" data-popup-content="goodpopup4">removable3 popup</div>
+    </div>
+</script>
+<script id="goodpopup4" type="text/x-handlebars-template" data-is-outer-click-closing="false">
     <div class="demo">
         <h1 class="demo-header">{{name}}</h1>
         <input type="text" class="demo-input"/><br/>

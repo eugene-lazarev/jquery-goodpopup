@@ -188,7 +188,7 @@
                 }
             } else {
                 options.callbackBeforeOpen.call(this);
-                this.renderContent();
+                self.renderContent.call(self);
             }
         };
         
@@ -207,12 +207,9 @@
                     }
                     this.destroyContent(true);
                 } else {
-                    this.destroyContent(false);
-                    if (stealed_popups_list[stealed_popups_list.length - 1].isStealed()) {
-                        stealed_popups_list[stealed_popups_list.length - 1].show();
-                    } else {
-                        stealed_popups_list[stealed_popups_list.length - 1].renderContent();
-                    }
+                    this.destroyContent(false, function() {
+                        stealed_popups_list[stealed_popups_list.length - 1].show.call(self);
+                    });
                 }
             } else {
                 options.callbackBeforeClose.call(self);
@@ -223,7 +220,7 @@
         };
         
         this.renderContent = function() {
-            if (self.isRendered()) {
+            if (this.isRendered()) {
                 return this;
             }
 
@@ -236,7 +233,7 @@
             } else {
                 $popup_content = $(renderPopupContentDOM(template_html, options.data));
             }
-            
+
             if (is_open) {
                 $popup_content.addClass(popup_content_pseudostealed_modificator);
             }
@@ -244,7 +241,7 @@
             $popup_inner.append($popup_content).promise().done(function() {
                 $popup_close = $popup_content.find(popup_close_selector);
                 $popup_close.on("click." + plugin_suffix, function() {
-                    self.close(true);
+                    self.close();
                 });
 
                 $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
@@ -262,7 +259,7 @@
                     var makeVisible = function() {
                         options.callbackAfterRender.call(self);
                     };
-                    
+
                     if (whichTransitionEvent) {
                         $popup_content.off(whichTransitionEvent + ".plugin_suffix").one(whichTransitionEvent + ".plugin_suffix", function() {
                             makeVisible.call(self);
@@ -282,12 +279,12 @@
 
             return this;
         };
-        
+
         this.rerenderContent = function(afterRerender) {
             options.callbackBeforeRender.call(this);
-            
+
             var $old_popup_content = $popup_content;
-            
+
             $popup_close.off("click." + plugin_suffix);
 
             $popup_content = $(renderPopupContentDOM(template_html, options.data));
@@ -297,16 +294,18 @@
                 $old_popup_content.remove();
 
                 $popup_close = $popup_content.find(popup_close_selector);
-                
+
                 options.callbackAfterRender.call(self);
-                
+
                 if (typeof afterRerender === "function") {
                     afterRerender();
                 }
             });
+            
+            return this;
         };
 
-        this.destroyContent = function(with_shell) {
+        this.destroyContent = function(with_shell, afterDestroy) {
             if (!self.isRendered()) {
                 return this;
             }
@@ -351,6 +350,10 @@
                     }
 
                     options.callbackAfterDestroy.call(self);
+                    
+                    if (typeof afterDestroy === "function") {
+                        afterDestroy();
+                    }
                 };
 
                 $popup_close.off("click." + plugin_suffix);
@@ -398,7 +401,7 @@
                     $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
                     $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
                     $popup_close.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
-                        self.close(true);
+                        self.close();
                     });
 
                     options.callbackAfterShow.call(self);
