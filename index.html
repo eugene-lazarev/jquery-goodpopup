@@ -71,18 +71,20 @@
 </head>
 <body>
 <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
-<div class="button js-button" data-popup-content="goodpopup2">non-detachable popup</div>
+<div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
 
 <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
     <div class="demo">
         <h1 class="demo-header">{{name}}</h1>
-        <input type="text" class="demo-input"/>
+        <input type="text" class="demo-input"/><br/>
+        <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
     </div>
 </script>
 <script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
     <div class="demo">
         <h1 class="demo-header">{{name}}</h1>
-        <input type="text" class="demo-input"/>
+        <input type="text" class="demo-input"/><br/>
+        <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
     </div>
 </script>
 
@@ -101,9 +103,9 @@
         $(document).on("click", ".js-button", function() {
             var $this = $(this);
 
-            $.goodpopup($this.data("popupContent")).updateOptions({
-                callbackAfterShow: function() {
-                    /* `this` is this instance with all methods and options */
+            $.goodpopup($this.data("popupContent")).setOptions({
+                callbackAfterOpen: function() {
+                    /* `this` is the instance of `GoodPopup` with all methods and options */
                     this.getPopupContent().find("input").focus();
                 },
                 data: {

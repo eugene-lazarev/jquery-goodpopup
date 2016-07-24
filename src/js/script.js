@@ -90,7 +90,7 @@
             if (typeof PopupInstance === "undefined") {
                 popups_list[this_id] = new GoodPopup($this, $.extend({}, $.fn.goodpopup.defaults, options, $this.data()));
             } else {
-                PopupInstance.updateOptions(options);
+                PopupInstance.setOptions(options);
             }
         });
     };
@@ -421,7 +421,7 @@
             return is_stealed;
         };
 
-        this.updateOptions = function(options_updated) {
+        this.setOptions = function(options_updated) {
             $.extend(options, options_updated);
 
             return this;
