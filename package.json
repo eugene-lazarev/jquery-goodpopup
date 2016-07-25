@@ -1,9 +1,14 @@
 {
   "name": "good-popup",
   "version": "2.0.0-beta.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eugene-lazarev/good-popup.git"
+  },
+  "license": "MIT",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-cssmin": "^1.0.1",
-    "grunt-contrib-uglify": "^1.0.1"
+    "grunt-contrib-uglify": "^2.0.0"
   }
 }
