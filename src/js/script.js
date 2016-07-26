@@ -8,9 +8,9 @@
     var popup_close_selector = ".js-goodpopup__close";
     var popup_active_modificator = "goodpopup_visible";
     var popup_inner_destroy_modificator = "goodpopup-inner-content_destroyed";
-    var popup_content_stealed_modificator = "goodpopup-inner-content-element_stealed";
-    var popup_content_stealedfull_modificator = "goodpopup-inner-content-element_stealedfull";
-    var popup_content_pseudostealed_modificator = "goodpopup-inner-content-element_pseudostealed";
+    var popup_content_hided_modificator = "goodpopup-inner-content-element_hided";
+    var popup_content_hidedfull_modificator = "goodpopup-inner-content-element_hidedfull";
+    var popup_content_pseudohided_modificator = "goodpopup-inner-content-element_pseudohided";
 
     var $popup;
     var $popup_inner;
@@ -18,7 +18,7 @@
     var is_open = false;
 
     var popups_list = {};
-    var stealed_popups_list = [];
+    var hided_popups_list = [];
     
     var whichTransitionEvent = (function() {
         var t;
@@ -39,7 +39,7 @@
         return false;
     })();
 
-    function throwError(popup_name, error_type) {
+    var throwError = function(popup_name, error_type) {
         function showError(text) {
             if (typeof console !== "undefined" && typeof console.error === "function") {
                 console.error(text);
@@ -66,48 +66,34 @@
         }
 
         return false;
-    }
+    };
 
-    function createPopupDOM() {
+    var createPopupDOM = function() {
         var popup_html = '<div class="goodpopup js-goodpopup"><div class="goodpopup-inner"><div class="goodpopup-inner-content js-goodpopup-inner-content"></div></div></div>';
 
         return $(popup_html).appendTo("body").promise().done(function() {
             $popup = $(popup_selector);
             $popup_inner = $popup.find(popup_inner_selector);
         });
-    }
-
-    function renderPopupContentDOM(template_html, template_data) {
-        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="goodpopup__close js-goodpopup__close"></span>' + '</div>';
-    }
-
-    $.fn.goodpopup = function(options) {
-        return this.each(function(i, element) {
-            var $this = $(element),
-                this_id = $this.attr("id"),
-                PopupInstance = popups_list[this_id];
-
-            if (typeof PopupInstance === "undefined") {
-                popups_list[this_id] = new GoodPopup($this, $.extend({}, $.fn.goodpopup.defaults, options, $this.data()));
-            } else {
-                PopupInstance.setOptions(options);
-            }
-        });
     };
 
-    $.fn.goodpopup.defaults = {
+    var renderPopupContentDOM = function(template_html, template_data) {
+        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="goodpopup__close js-goodpopup__close"></span>' + '</div>';
+    };
+    
+    var default_options = {
         callbackBeforeOpen: function() {},
         callbackAfterOpen: function() {},
 
         callbackBeforeClose: function() {},
         callbackAfterClose: function() {},
-        
+
         callbackBeforeRender: function() {},
         callbackAfterRender: function() {},
-        
+
         callbackBeforeDestroy: function() {},
         callbackAfterDestroy: function() {},
-        
+
         callbackBeforeShow: function() {},
         callbackAfterShow: function() {},
 
@@ -118,8 +104,22 @@
         isOuterClickClosing: true,
 
         keyCodeForClosing: 27,
-        
+
         data: {}
+    };
+
+    $.fn.goodpopup = function(options) {
+        return this.each(function(i, element) {
+            var $this = $(element),
+                this_id = $this.attr("id"),
+                PopupInstance = popups_list[this_id];
+
+            if (typeof PopupInstance === "undefined") {
+                popups_list[this_id] = new GoodPopup($this, $.extend({}, default_options, options, $this.data()));
+            } else {
+                PopupInstance.setOptions(options);
+            }
+        });
     };
 
     function GoodPopup($template, options_set) {
@@ -199,16 +199,16 @@
 
             var is_forced_closing = forced_closing || false;
             
-            if (stealed_popups_list.length > 0) {
+            if (hided_popups_list.length > 0) {
                 if (is_forced_closing) {
                     options.callbackBeforeClose.call(self);
-                    for (var i = stealed_popups_list.length; i > 0; i--) {
-                        stealed_popups_list[i - 1]._destroyContent(false);
+                    for (var i = hided_popups_list.length; i > 0; i--) {
+                        hided_popups_list[i - 1]._destroyContent(false);
                     }
                     this._destroyContent(true);
                 } else {
                     this._destroyContent(false, function() {
-                        stealed_popups_list[stealed_popups_list.length - 1]._show.call(self);
+                        hided_popups_list[hided_popups_list.length - 1]._show.call(self);
                     });
                 }
             } else {
@@ -246,7 +246,7 @@
         };
         
         
-        /* Other methods */        
+        /* Other methods */
         this._renderContent = function() {
             if (this.isRendered()) {
                 return this;
@@ -263,7 +263,7 @@
             }
 
             if (is_open) {
-                $popup_content.addClass(popup_content_pseudostealed_modificator);
+                $popup_content.addClass(popup_content_pseudohided_modificator);
             }
 
             $popup_inner.append($popup_content).promise().done(function() {
@@ -294,7 +294,7 @@
                         });
                     }
                     setTimeout(function() {
-                        $popup_content.removeClass(popup_content_pseudostealed_modificator);
+                        $popup_content.removeClass(popup_content_pseudohided_modificator);
                     }, 1);
                     if (!whichTransitionEvent) {
                         makeVisible.call(self);
@@ -316,7 +316,7 @@
             $popup_close.off("click." + plugin_suffix);
 
             $popup_content = $(renderPopupContentDOM(template_html, options.data));
-            $popup_content.addClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator);
+            $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
 
             $old_popup_content.after($popup_content).promise().done(function() {
                 $old_popup_content.remove();
@@ -343,7 +343,7 @@
             if (typeof (with_shell) !== "undefined" && with_shell) {
                 var destroy = function() {
                     if (options.isDetachable) {
-                        $popup_content.detach().removeClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator + " " + popup_content_pseudostealed_modificator + " " + popup_inner_destroy_modificator);
+                        $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
                     } else {
                         $popup_content.remove();
                     }
@@ -372,7 +372,7 @@
             } else {
                 var destroy = function() {
                     if (options.isDetachable) {
-                        $popup_content.detach().removeClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator + " " + popup_content_pseudostealed_modificator + " " + popup_inner_destroy_modificator);
+                        $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
                     } else {
                         $popup_content.remove();
                     }
@@ -407,9 +407,9 @@
                 }
             }
 
-            for (var i = 0; i < stealed_popups_list.length; i++) {
-                if (stealed_popups_list[i] === this) {
-                    stealed_popups_list.splice(i, 1);
+            for (var i = 0; i < hided_popups_list.length; i++) {
+                if (hided_popups_list[i] === this) {
+                    hided_popups_list.splice(i, 1);
                     break;
                 }
             }
@@ -440,16 +440,16 @@
                         makeRetrieved.call(self);
                     });
                 }
-                $popup_content.removeClass(popup_content_stealedfull_modificator).removeClass(popup_content_stealed_modificator);
+                $popup_content.removeClass(popup_content_hidedfull_modificator).removeClass(popup_content_hided_modificator);
                 if (!whichTransitionEvent) {
                     makeRetrieved.call(self);
                 }
 
                 is_hided = false;
 
-                for (var i = 0; i < stealed_popups_list.length; i++) {
-                    if (stealed_popups_list[i] === this) {
-                        stealed_popups_list.splice(i, 1);
+                for (var i = 0; i < hided_popups_list.length; i++) {
+                    if (hided_popups_list[i] === this) {
+                        hided_popups_list.splice(i, 1);
                         break;
                     }
                 }
@@ -472,7 +472,7 @@
             }
 
             function makeStealed() {
-                $popup_content.addClass(popup_content_stealedfull_modificator);
+                $popup_content.addClass(popup_content_hidedfull_modificator);
 
                 options.callbackAfterHide.call(self);
 
@@ -492,12 +492,12 @@
                     makeStealed.call(self);
                 });
             }
-            $popup_content.addClass(popup_content_stealed_modificator);
+            $popup_content.addClass(popup_content_hided_modificator);
             if (!whichTransitionEvent) {
                 makeStealed.call(self);
             }
 
-            stealed_popups_list.push(this);
+            hided_popups_list.push(this);
             is_hided = true;
 
             return this;
