@@ -72,8 +72,8 @@
 <body>
 <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
 <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
-<div class="button js-button" data-popup-content="goodpopup3">removable2 popup</div>
-<div class="button js-button" data-popup-content="goodpopup4">removable3 popup</div>
+<div class="button js-button" data-popup-content="goodpopup3">img popup</div>
+<div class="button js-button" data-popup-content="goodpopup4">iframe popup</div>
 
 <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
     <div class="demo">
@@ -82,26 +82,18 @@
         <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
     </div>
 </script>
-<script id="goodpopup2" type="text/x-handlebars-template" data-is-outer-click-closing="false">
-    <div class="demo">
-        <h1 class="demo-header">{{name}}</h1>
-        <input type="text" class="demo-input"/><br/>
-        <div class="button js-button" data-popup-content="goodpopup3">removable2 popup</div>
-    </div>
-</script>
-<script id="goodpopup3" type="text/x-handlebars-template" data-is-outer-click-closing="false">
-    <div class="demo">
-        <h1 class="demo-header">{{name}}</h1>
-        <input type="text" class="demo-input"/><br/>
-        <div class="button js-button" data-popup-content="goodpopup4">removable3 popup</div>
-    </div>
-</script>
-<script id="goodpopup4" type="text/x-handlebars-template" data-is-outer-click-closing="false">
+<script id="goodpopup2" type="text/x-handlebars-template">
     <div class="demo">
         <h1 class="demo-header">{{name}}</h1>
         <input type="text" class="demo-input"/><br/>
         <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
     </div>
+</script>
+<script id="goodpopup3" type="text/x-handlebars-template">
+    <img src="https://pp.vk.me/c306802/v306802386/2f43/U21gA1fsRfk.jpg" alt="" style="max-width: 100%; vertical-align: top;"/>
+</script>
+<script id="goodpopup4" type="text/x-handlebars-template" data-is-outer-click-closing="false">
+    <iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/shop.xml?account=41001145324032&quickpay=shop&payment-type-choice=on&writer=seller&targets=%D0%97%D0%B0+%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD+GoodPopup&targets-hint=&default-sum=50&button-text=03&successURL=https%3A%2F%2Feugene-lazarev.github.io%2Fgood-popup%2F" width="450" height="198" style="vertical-align: top;"></iframe>
 </script>
 
 <!--[if IE 8]>
