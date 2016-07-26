@@ -129,7 +129,7 @@
         var options = options_set;
 
         var is_rendered = false;
-        var is_stealed = false;
+        var is_hided = false;
 
         var $popup_close;
         var $popup_content;
@@ -164,11 +164,11 @@
         this.open = function() {
             if (is_open) {
                 if (this.isRendered()) {
-                    if (this.isStealed()) {
+                    if (this.isHided()) {
                         $.each(popups_list, function(name, value) {
-                            if (value.isRendered() && !value.isStealed()) {
-                                value.hide(function() {
-                                    self.show.call(self);
+                            if (value.isRendered() && !value.isHided()) {
+                                value._hide(function() {
+                                    self._show.call(self);
                                 });
                                 return false;
                             }
@@ -178,9 +178,9 @@
                     }
                 } else {
                     $.each(popups_list, function(name, value) {
-                        if (value.isRendered() && !value.isStealed()) {
-                            value.hide(function() {
-                                self.renderContent.call(self);
+                        if (value.isRendered() && !value.isHided()) {
+                            value._hide(function() {
+                                self._renderContent.call(self);
                             });
                             return false;
                         }
@@ -188,7 +188,7 @@
                 }
             } else {
                 options.callbackBeforeOpen.call(this);
-                self.renderContent.call(self);
+                self._renderContent.call(self);
             }
         };
         
@@ -203,23 +203,51 @@
                 if (is_forced_closing) {
                     options.callbackBeforeClose.call(self);
                     for (var i = stealed_popups_list.length; i > 0; i--) {
-                        stealed_popups_list[i - 1].destroyContent(false);
+                        stealed_popups_list[i - 1]._destroyContent(false);
                     }
-                    this.destroyContent(true);
+                    this._destroyContent(true);
                 } else {
-                    this.destroyContent(false, function() {
-                        stealed_popups_list[stealed_popups_list.length - 1].show.call(self);
+                    this._destroyContent(false, function() {
+                        stealed_popups_list[stealed_popups_list.length - 1]._show.call(self);
                     });
                 }
             } else {
                 options.callbackBeforeClose.call(self);
-                this.destroyContent(true);
+                this._destroyContent(true);
             }
             
             return this;
         };
+
+        this.isRendered = function() {
+            return is_rendered;
+        };
+
+        this.isHided = function() {
+            return is_hided;
+        };
+
+        this.setOptions = function(options_updated) {
+            $.extend(options, options_updated);
+
+            return this;
+        };
+
+        this.getOptions = function() {
+            return options;
+        };
+
+        this.getPopupContent = function() {
+            return $popup_content;
+        };
+
+        this.getPopupId = function() {
+            return popup_id;
+        };
         
-        this.renderContent = function() {
+        
+        /* Other methods */        
+        this._renderContent = function() {
             if (this.isRendered()) {
                 return this;
             }
@@ -280,7 +308,7 @@
             return this;
         };
 
-        this.rerenderContent = function(afterRerender) {
+        this._rerenderContent = function(afterRerender) {
             options.callbackBeforeRender.call(this);
 
             var $old_popup_content = $popup_content;
@@ -305,7 +333,7 @@
             return this;
         };
 
-        this.destroyContent = function(with_shell, afterDestroy) {
+        this._destroyContent = function(with_shell, afterDestroy) {
             if (!self.isRendered()) {
                 return this;
             }
@@ -315,7 +343,7 @@
             if (typeof (with_shell) !== "undefined" && with_shell) {
                 var destroy = function() {
                     if (options.isDetachable) {
-                        $popup_content.detach();
+                        $popup_content.detach().removeClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator + " " + popup_content_pseudostealed_modificator + " " + popup_inner_destroy_modificator);
                     } else {
                         $popup_content.remove();
                     }
@@ -339,12 +367,12 @@
                 }
 
                 is_open = false;
-                is_stealed = false;
+                is_hided = false;
                 is_rendered = false;
             } else {
                 var destroy = function() {
                     if (options.isDetachable) {
-                        $popup_content.detach().removeClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator + " " + popup_content_pseudostealed_modificator);
+                        $popup_content.detach().removeClass(popup_content_stealed_modificator + " " + popup_content_stealedfull_modificator + " " + popup_content_pseudostealed_modificator + " " + popup_inner_destroy_modificator);
                     } else {
                         $popup_content.remove();
                     }
@@ -358,8 +386,8 @@
 
                 $popup_close.off("click." + plugin_suffix);
                 
-                if (is_stealed) {
-                    is_stealed = false;
+                if (is_hided) {
+                    is_hided = false;
                     is_rendered = false;
 
                     destroy.call(self);
@@ -374,7 +402,7 @@
                         destroy.call(self);
                     }
 
-                    is_stealed = false;
+                    is_hided = false;
                     is_rendered = false;
                 }
             }
@@ -389,8 +417,8 @@
             return this;
         };
 
-        this.show = function() {
-            if (!is_stealed) {
+        this._show = function() {
+            if (!is_hided) {
                 return this;
             }
 
@@ -417,7 +445,7 @@
                     makeRetrieved.call(self);
                 }
 
-                is_stealed = false;
+                is_hided = false;
 
                 for (var i = 0; i < stealed_popups_list.length; i++) {
                     if (stealed_popups_list[i] === this) {
@@ -428,7 +456,7 @@
             }
 
             if (!options.isDetachable) {
-                self.rerenderContent.call(self, function() {
+                self._rerenderContent.call(self, function() {
                     show.call(self);
                 });
             } else {
@@ -438,8 +466,8 @@
             return this;
         };
         
-        this.hide = function(afterHide) {
-            if (is_stealed) {
+        this._hide = function(afterHide) {
+            if (is_hided) {
                 return this;
             }
 
@@ -470,35 +498,9 @@
             }
 
             stealed_popups_list.push(this);
-            is_stealed = true;
+            is_hided = true;
 
             return this;
-        };
-
-        this.isRendered = function() {
-            return is_rendered;
-        };
-        
-        this.isStealed = function() {
-            return is_stealed;
-        };
-
-        this.setOptions = function(options_updated) {
-            $.extend(options, options_updated);
-
-            return this;
-        };
-
-        this.getOptions = function() {
-            return options;
-        };
-
-        this.getPopupContent = function() {
-            return $popup_content;
-        };
-        
-        this.getPopupId = function() {
-            return popup_id;
         };
 
 
