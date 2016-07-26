@@ -58,14 +58,20 @@
 
         switch(error_type) {
             case "NOT_FOUND":
-                showError("Popup template `" + popup_name + "` was not inited yet");
+                var $popup_template = $("#" + popup_name);
+                if ($popup_template.length > 0) {
+                    showError("Please initialize popup `" + popup_name + "`: `$('#" + popup_name + "').goodpopup();`");
+                    return $popup_template;
+                } else {
+                    showError("Popup template `" + popup_name + "` doesn't exist");
+                    return popup_name;
+                }
                 break;
             default:
                 showTrace("Problem with popup");
+                return popup_name;
                 break;
         }
-
-        return false;
     };
 
     var createPopupDOM = function() {
@@ -110,12 +116,13 @@
 
     $.fn.goodpopup = function(options) {
         return this.each(function(i, element) {
-            var $this = $(element),
-                this_id = $this.attr("id"),
-                PopupInstance = popups_list[this_id];
+            var $this = $(element);
+            var this_id = $this.attr("id");
+            var PopupInstance = popups_list[this_id];
+            var options_set = $.extend({}, default_options, options, $this.data());
 
             if (typeof PopupInstance === "undefined") {
-                popups_list[this_id] = new GoodPopup($this, $.extend({}, default_options, options, $this.data()));
+                popups_list[this_id] = new GoodPopup($this, options_set);
             } else {
                 PopupInstance.setOptions(options);
             }
@@ -124,7 +131,6 @@
 
     function GoodPopup($template, options_set) {
         var self = this;
-        var template_html = $template.html();
         var popup_id = $template.attr("id");
         var options = options_set;
 
@@ -228,7 +234,9 @@
         };
 
         this.setOptions = function(options_updated) {
-            $.extend(options, options_updated);
+            if ($.isPlainObject(options_updated)) {
+                $.extend(options, options_updated);
+            }
 
             return this;
         };
@@ -256,10 +264,10 @@
 
             if (options.isDetachable) {
                 if (typeof $popup_content === "undefined") {
-                    $popup_content = $(renderPopupContentDOM(template_html, options.data));
+                    $popup_content = $(renderPopupContentDOM($template.html(), options.data));
                 }
             } else {
-                $popup_content = $(renderPopupContentDOM(template_html, options.data));
+                $popup_content = $(renderPopupContentDOM($template.html(), options.data));
             }
 
             if (is_open) {
@@ -315,7 +323,7 @@
 
             $popup_close.off("click." + plugin_suffix);
 
-            $popup_content = $(renderPopupContentDOM(template_html, options.data));
+            $popup_content = $(renderPopupContentDOM($template.html(), options.data));
             $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
 
             $old_popup_content.after($popup_content).promise().done(function() {
@@ -514,10 +522,8 @@
         if (typeof popups_list[popup_name] !== "undefined") {
             return popups_list[popup_name];
         } else {
-            throwError(popup_name, "NOT_FOUND");
+            return throwError(popup_name, "NOT_FOUND");
         }
-
-        return this;
     };
 
     $.goodpopup.getPopups = function() {

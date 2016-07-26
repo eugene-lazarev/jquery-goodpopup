@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <title></title>
+    <title>GoodPopup by Evgeniy Lazarev</title>
 
     <link href="build/css/style.min.css" rel="stylesheet" type="text/css"/>
 
@@ -117,20 +117,23 @@
 <script>
     $(function() {
         $(document).on("click", ".js-button", function() {
-            var $this = $(this);
+            var $this = $(this),
+                GoodPopup = $.goodpopup($this.data("popupContent"));
 
-            $.goodpopup($this.data("popupContent")).setOptions({
-                callbackAfterRender: function() {
-                    /* `this` is the instance of `GoodPopup` with all methods and options */
-                    this.getPopupContent().find("input").focus();
-                },
-                callbackAfterShow: function() {
-                    this.getPopupContent().find("input").focus();
-                },
-                data: {
-                    name: $this.text()
-                }
-            }).open();
+            GoodPopup
+                .setOptions({
+                    callbackAfterRender: function() {
+                        /* `this` is the instance of `GoodPopup` with all methods and options */
+                        this.getPopupContent().find("input").focus();
+                    },
+                    callbackAfterShow: function() {
+                        this.getPopupContent().find("input").focus();
+                    },
+                    data: {
+                        name: $this.text()
+                    }
+                })
+                .open();
         });
     });
 </script>
