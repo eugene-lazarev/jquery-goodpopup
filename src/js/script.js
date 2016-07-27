@@ -5,7 +5,7 @@
 
     var popup_selector = ".js-goodpopup";
     var popup_inner_selector = ".js-goodpopup-inner-content";
-    var popup_close_class = "js-goodpopup__close";
+    var popup_close_class = "js-goodpopup-close";
     var popup_active_modificator = "goodpopup_visible";
     var popup_inner_destroy_modificator = "goodpopup-inner-content_destroyed";
     var popup_content_hided_modificator = "goodpopup-inner-content-element_hided";
@@ -19,6 +19,20 @@
 
     var popups_list = {};
     var hided_popups_list = [];
+
+    var isSVGSupported = false;
+    var checkSVGSupport = function() {
+        /* https://css-tricks.com/a-complete-guide-to-svg-fallbacks/ */
+        var div = document.createElement("div");
+        div.innerHTML = "<svg/>";
+        return (div.firstChild && div.firstChild.namespaceURI) == "http://www.w3.org/2000/svg";
+    };
+    var setSVGSupport = function() {
+        if ((typeof Modernizr === "object" && typeof Modernizr.inlinesvg === "boolean" && Modernizr.inlinesvg) || checkSVGSupport()) {
+            isSVGSupported = true;
+        }
+        return this;
+    };
     
     var whichTransitionEvent = (function() {
         var t;
@@ -89,7 +103,7 @@
     };
 
     var renderPopupContentDOM = function(template_html, template_data) {
-        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="goodpopup__close js-goodpopup__close"></span>' + '</div>';
+        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="goodpopup-close js-goodpopup-close">' + (isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAtElEQVRIx6WVyxXFIAgFbwkpkRLSiSVQkiXxFvm+HIGruFOYWYQAAABs6DAI2NNg6Niu64EbDI3C9cw+FQ9uMCiN34o3niv0k93xeYgVOshGoxUjvHkBpfD9CkqqGOF/ZY8VKR4rKNxX0LinmMA5RdoxUsNjBd2vUsPHhWM6NcRphYYfUWs1SBXcj6Qz+O680p3gRSZ6kVLkAyVUyPJIEx4PFOWxXl4s5dX2VujKcn0UurLef0f+APbXjsH9AAAAAElFTkSuQmCC" alt="" class="goodpopup-close__png"/>') + '</span>' + '</div>';
     };
     
     var default_options = {
@@ -548,6 +562,7 @@
 
     /* Init */
     var initPopupTemplates = function() {
+        setSVGSupport();
         $("script[type='text/x-handlebars-template']").goodpopup();
     };
 

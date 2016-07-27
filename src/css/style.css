@@ -92,29 +92,31 @@ html.noscroll body {
     transform: scale(0.7);
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.goodpopup__close {
+.goodpopup-close {
     position: absolute;
-    top: -1.1em;
-    right: -1.1em;
-    width: 1.3em;
-    height: 1.3em;
+    top: -21px;
+    right: -27px;
+    width: 26px;
+    height: 26px;
     cursor: pointer;
-    color: #000;
     background: #fff;
     border-radius: 50%;
 }
-.goodpopup__close:hover {
-    color: #ff4500;
+.goodpopup-close-svg {
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
 }
-.goodpopup__close:after {
-    content: '×';
-    font-weight: 700;
-    font-size: 1em;
-    line-height: 1;
-    line-height: 1.3\9; /* IE8 */
-    text-align: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+.goodpopup-close-svg__path {
+    fill: #000;
+    transition: fill 0.2s ease;
+}
+.goodpopup-close:hover .goodpopup-close-svg__path {
+    fill: #ff4500;
+    transition: none;
+}
+.goodpopup-close__png {
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
 }
