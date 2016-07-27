@@ -5,7 +5,7 @@
 
     var popup_selector = ".js-goodpopup";
     var popup_inner_selector = ".js-goodpopup-inner-content";
-    var popup_close_selector = ".js-goodpopup__close";
+    var popup_close_class = "js-goodpopup__close";
     var popup_active_modificator = "goodpopup_visible";
     var popup_inner_destroy_modificator = "goodpopup-inner-content_destroyed";
     var popup_content_hided_modificator = "goodpopup-inner-content-element_hided";
@@ -165,14 +165,15 @@
             
             for (var i = 0; i < keyForClosing.length; i++) {
                 if (event.keyCode === keyForClosing[i]) {
-                    self.close.call(self, true);
+                    self.close.call(self, options.forceClosing.keydown);
                 }
             }
         }
 
         function handleOuterClick(event) {
-            if (options.isOuterClickClosing && $(event.target).parents(".js-goodpopup-inner-content").length === 0) {
-                self.close.call(self, true);
+            var $target = $(event.target);
+            if (options.isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popup_close_class)) {
+                self.close.call(self, options.forceClosing.click);
             }
         }
         
@@ -289,9 +290,9 @@
             }
 
             $popup_inner.append($popup_content).promise().done(function() {
-                $popup_close = $popup_content.find(popup_close_selector);
+                $popup_close = $popup_content.find("." + popup_close_class);
                 $popup_close.on("click." + plugin_suffix, function() {
-                    self.close.call(self, options.isForceClosing);
+                    self.close.call(self, options.forceClosing.button);
                 });
 
                 $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
@@ -343,7 +344,7 @@
             $old_popup_content.after($popup_content).promise().done(function() {
                 $old_popup_content.remove();
 
-                $popup_close = $popup_content.find(popup_close_selector);
+                $popup_close = $popup_content.find("." + popup_close_class);
 
                 options.callbackAfterRender.call(self);
 
@@ -458,7 +459,7 @@
                     $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
                     $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
                     $popup_close.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
-                        self.close.call(self, options.isForceClosing);
+                        self.close.call(self, options.forceClosing.button);
                     });
 
                     options.callbackAfterShow.call(self);
