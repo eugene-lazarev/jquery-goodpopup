@@ -39,7 +39,7 @@
         return false;
     })();
 
-    var throwError = function(popup_name, error_type) {
+    var throwError = function(popup_name, error_type, additional_data) {
         function showError(text) {
             if (typeof console !== "undefined" && typeof console.error === "function") {
                 console.error(text);
@@ -59,6 +59,7 @@
         switch(error_type) {
             case "NOT_FOUND":
                 var $popup_template = $("#" + popup_name);
+                
                 if ($popup_template.length > 0) {
                     showError("Please initialize popup `" + popup_name + "`: `$('#" + popup_name + "').goodpopup();`");
                     return $popup_template;
@@ -66,6 +67,10 @@
                     showError("Popup template `" + popup_name + "` doesn't exist");
                     return popup_name;
                 }
+                break;
+            case "WRONG_OPTIONS":
+                showError("Wrong options object in method `setOptions` on popup `" + popup_name + "`");
+                return additional_data;
                 break;
             default:
                 showTrace("Problem with popup");
@@ -108,9 +113,14 @@
 
         isDetachable: false,
         isOuterClickClosing: true,
-        isForceClosing: false,
 
         keyCodeForClosing: 27,
+
+        forceClosing: {
+            click: true,
+            keydown: true,
+            button: false
+        },
 
         data: {}
     };
@@ -236,7 +246,10 @@
 
         this.setOptions = function(options_updated) {
             if ($.isPlainObject(options_updated)) {
-                $.extend(options, options_updated);
+                if (options_updated.hasOwnProperty("forceClosing") && !$.isPlainObject(options_updated["forceClosing"])) {
+                    return throwError(popup_id, "WRONG_OPTIONS", options_updated);
+                }
+                $.extend(true, options, options_updated);
             }
 
             return this;
