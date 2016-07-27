@@ -125,6 +125,9 @@
         callbackBeforeHide: function() {},
         callbackAfterHide: function() {},
 
+        isPrerendered: false,
+        isIframe: false,
+        
         isDetachable: false,
         isOuterClickClosing: true,
 
@@ -222,6 +225,8 @@
                 options.callbackBeforeOpen.call(this);
                 self._renderContent.call(self);
             }
+            
+            return this;
         };
         
         this.close = function(forced_closing) {
@@ -285,25 +290,13 @@
         
         /* Other methods */
         this._renderContent = function() {
-            if (this.isRendered()) {
+            if (this.isRendered() && !options.isIframe) {
                 return this;
             }
 
             options.callbackBeforeRender.call(this);
-
-            if (options.isDetachable) {
-                if (typeof $popup_content === "undefined") {
-                    $popup_content = $(renderPopupContentDOM($template.html(), options.data));
-                }
-            } else {
-                $popup_content = $(renderPopupContentDOM($template.html(), options.data));
-            }
-
-            if (is_open) {
-                $popup_content.addClass(popup_content_pseudohided_modificator);
-            }
-
-            $popup_inner.append($popup_content).promise().done(function() {
+            
+            var afterRender = function() {
                 $popup_close = $popup_content.find("." + popup_close_class);
                 $popup_close.on("click." + plugin_suffix, function() {
                     self.close.call(self, options.forceClosing.button);
@@ -317,6 +310,7 @@
                     options.callbackAfterOpen.call(self);
 
                     is_rendered = true;
+                    is_hided = false;
                     is_open = true;
 
                     options.callbackAfterRender.call(self);
@@ -338,9 +332,39 @@
                     }
 
                     is_rendered = true;
+                    is_hided = false;
                     is_open = true;
                 }
-            });
+            };
+            
+            if (!options.isPrerendered) {
+                if (!options.isIframe) {
+                    if (options.isDetachable) {
+                        if (typeof $popup_content === "undefined") {
+                            $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+                        }
+                    } else {
+                        $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+                    }
+                }
+            } else {
+                this.setOptions({
+                    isPrerendered: false
+                });
+            }
+
+            if (is_open) {
+                $popup_content.addClass(popup_content_pseudohided_modificator);
+            }
+
+            if (!options.isPrerendered && !options.isIframe) {
+                $popup_inner.append($popup_content).promise().done(function () {
+                    afterRender.call(self);
+                });
+            } else {
+                $popup_content.removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
+                afterRender.call(self);
+            }
 
             return this;
         };
@@ -386,10 +410,15 @@
 
             if (typeof (with_shell) !== "undefined" && with_shell) {
                 var destroy = function() {
-                    if (options.isDetachable) {
-                        $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
+                    if (!options.isIframe) {
+                        if (options.isDetachable) {
+                            $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
+                        } else {
+                            $popup_content.remove();
+                            $popup_content = undefined;
+                        }
                     } else {
-                        $popup_content.remove();
+                        $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
                     options.callbackAfterDestroy.call(self);
@@ -415,10 +444,15 @@
                 is_rendered = false;
             } else {
                 var destroy = function() {
-                    if (options.isDetachable) {
-                        $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
+                    if (!options.isIframe) {
+                        if (options.isDetachable) {
+                            $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
+                        } else {
+                            $popup_content.remove();
+                            $popup_content = undefined;
+                        }
                     } else {
-                        $popup_content.remove();
+                        $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
                     options.callbackAfterDestroy.call(self);
@@ -484,7 +518,7 @@
                         makeRetrieved.call(self);
                     });
                 }
-                $popup_content.removeClass(popup_content_hidedfull_modificator).removeClass(popup_content_hided_modificator);
+                $popup_content.removeClass(popup_content_hidedfull_modificator + " " + popup_content_hided_modificator);
                 if (!whichTransitionEvent) {
                     makeRetrieved.call(self);
                 }
@@ -492,7 +526,7 @@
                 is_hided = false;
             }
 
-            if (!options.isDetachable) {
+            if (!options.isDetachable && !options.isIframe) {
                 self._rerenderContent.call(self, function() {
                     show.call(self);
                 });
@@ -539,6 +573,18 @@
 
             return this;
         };
+        
+        
+        /* Check if pre-render is needed */
+        if (options.isPrerendered) {
+            $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+            $popup_close = $popup_content.find("." + popup_close_class);
+            
+            $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
+            $popup_inner.append($popup_content);
+            is_rendered = true;
+            is_hided = true;
+        }
 
 
         /* Set data to DOM elements */
