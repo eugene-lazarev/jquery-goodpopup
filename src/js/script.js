@@ -130,7 +130,7 @@
             var $this = $(element);
             var this_id = $this.attr("id");
             var PopupInstance = popups_list[this_id];
-            var options_set = $.extend({}, default_options, options, $this.data());
+            var options_set = $.extend(true, {}, default_options, options, $this.data());
 
             if (typeof PopupInstance === "undefined") {
                 popups_list[this_id] = new GoodPopup($this, options_set);
@@ -143,7 +143,7 @@
     function GoodPopup($template, options_set) {
         var self = this;
         var popup_id = $template.attr("id");
-        var options = options_set;
+        var options = $.extend(true, {}, options_set);
 
         var is_rendered = false;
         var is_hided = false;
@@ -225,7 +225,7 @@
                     this._destroyContent(true);
                 } else {
                     this._destroyContent(false, function() {
-                        hided_popups_list[hided_popups_list.length - 1]._show.call(self);
+                        hided_popups_list[hided_popups_list.length - 1]._show.call(hided_popups_list[hided_popups_list.length - 1]);
                     });
                 }
             } else {
@@ -362,6 +362,13 @@
 
             options.callbackBeforeDestroy.call(this);
 
+            for (var i = 0; i < hided_popups_list.length; i++) {
+                if (hided_popups_list[i] === this) {
+                    hided_popups_list.splice(i, 1);
+                    break;
+                }
+            }
+
             if (typeof (with_shell) !== "undefined" && with_shell) {
                 var destroy = function() {
                     if (options.isDetachable) {
@@ -428,13 +435,6 @@
                     is_rendered = false;
                 }
             }
-
-            for (var i = 0; i < hided_popups_list.length; i++) {
-                if (hided_popups_list[i] === this) {
-                    hided_popups_list.splice(i, 1);
-                    break;
-                }
-            }
             
             return this;
         };
@@ -445,6 +445,13 @@
             }
 
             options.callbackBeforeShow.call(self);
+
+            for (var i = 0; i < hided_popups_list.length; i++) {
+                if (hided_popups_list[i] === this) {
+                    hided_popups_list.splice(i, 1);
+                    break;
+                }
+            }
             
             function show() {
                 var makeRetrieved = function() {
@@ -468,13 +475,6 @@
                 }
 
                 is_hided = false;
-
-                for (var i = 0; i < hided_popups_list.length; i++) {
-                    if (hided_popups_list[i] === this) {
-                        hided_popups_list.splice(i, 1);
-                        break;
-                    }
-                }
             }
 
             if (!options.isDetachable) {
