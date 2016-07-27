@@ -108,6 +108,7 @@
 
         isDetachable: false,
         isOuterClickClosing: true,
+        isForceClosing: false,
 
         keyCodeForClosing: 27,
 
@@ -277,7 +278,7 @@
             $popup_inner.append($popup_content).promise().done(function() {
                 $popup_close = $popup_content.find(popup_close_selector);
                 $popup_close.on("click." + plugin_suffix, function() {
-                    self.close();
+                    self.close.call(self, options.isForceClosing);
                 });
 
                 $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
@@ -437,7 +438,7 @@
                     $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
                     $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
                     $popup_close.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
-                        self.close();
+                        self.close.call(self, options.isForceClosing);
                     });
 
                     options.callbackAfterShow.call(self);
