@@ -182,15 +182,15 @@
             
             for (var i = 0; i < keyForClosing.length; i++) {
                 if (event.keyCode === keyForClosing[i]) {
-                    self.close.call(self, options.forceClosing.keydown);
+                    self.close.call(self, self.getOptions().forceClosing.keydown);
                 }
             }
         }
 
         function handleOuterClick(event) {
             var $target = $(event.target);
-            if (options.isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popup_close_class)) {
-                self.close.call(self, options.forceClosing.click);
+            if (self.getOptions().isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popup_close_class)) {
+                self.close.call(self, self.getOptions().forceClosing.click);
             }
         }
         
@@ -222,7 +222,7 @@
                     });
                 }
             } else {
-                options.callbackBeforeOpen.call(this);
+                self.getOptions().callbackBeforeOpen.call(this);
                 self._renderContent.call(self);
             }
             
@@ -238,7 +238,7 @@
             
             if (hided_popups_list.length > 0) {
                 if (is_forced_closing) {
-                    options.callbackBeforeClose.call(self);
+                    self.getOptions().callbackBeforeClose.call(self);
                     for (var i = hided_popups_list.length; i > 0; i--) {
                         hided_popups_list[i - 1]._destroyContent(false);
                     }
@@ -249,7 +249,7 @@
                     });
                 }
             } else {
-                options.callbackBeforeClose.call(self);
+                self.getOptions().callbackBeforeClose.call(self);
                 this._destroyContent(true);
             }
             
@@ -290,16 +290,16 @@
         
         /* Other methods */
         this._renderContent = function() {
-            if (this.isRendered() && !options.isIframe) {
+            if (this.isRendered() && !self.getOptions().isIframe && !self.getOptions().isPrerendered) {
                 return this;
             }
 
-            options.callbackBeforeRender.call(this);
+            self.getOptions().callbackBeforeRender.call(this);
             
             var afterRender = function() {
                 $popup_close = $popup_content.find("." + popup_close_class);
                 $popup_close.on("click." + plugin_suffix, function() {
-                    self.close.call(self, options.forceClosing.button);
+                    self.close.call(self, self.getOptions().forceClosing.button);
                 });
 
                 $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
@@ -307,16 +307,16 @@
 
                 if (!is_open) {
                     $popup.addClass(popup_active_modificator);
-                    options.callbackAfterOpen.call(self);
+                    self.getOptions().callbackAfterOpen.call(self);
 
                     is_rendered = true;
                     is_hided = false;
                     is_open = true;
 
-                    options.callbackAfterRender.call(self);
+                    self.getOptions().callbackAfterRender.call(self);
                 } else {
                     var makeVisible = function() {
-                        options.callbackAfterRender.call(self);
+                        self.getOptions().callbackAfterRender.call(self);
                     };
 
                     if (whichTransitionEvent) {
@@ -337,29 +337,30 @@
                 }
             };
             
-            if (!options.isPrerendered) {
-                if (options.isDetachable || options.isIframe) {
+            if (!self.getOptions().isPrerendered) {
+                if (self.getOptions().isDetachable || self.getOptions().isIframe) {
                     if (typeof $popup_content === "undefined") {
-                        $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+                        $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
                     }
                 } else {
-                    $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+                    $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
                 }
-            } else {
-                this.setOptions({
-                    isPrerendered: false
-                });
             }
 
             if (is_open) {
                 $popup_content.addClass(popup_content_pseudohided_modificator);
             }
             
-            if ((!options.isPrerendered && !options.isIframe) || (options.isIframe && !this.isRendered())) {
+            if ((!self.getOptions().isPrerendered && !self.getOptions().isIframe) || (self.getOptions().isIframe && !this.isRendered())) {
                 $popup_inner.append($popup_content).promise().done(function () {
                     afterRender.call(self);
                 });
             } else {
+                if (self.getOptions().isPrerendered) {
+                    this.setOptions({
+                        isPrerendered: false
+                    });
+                }
                 $popup_content.removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
                 afterRender.call(self);
             }
@@ -368,13 +369,13 @@
         };
 
         this._rerenderContent = function(afterRerender) {
-            options.callbackBeforeRender.call(this);
+            self.getOptions().callbackBeforeRender.call(this);
 
             var $old_popup_content = $popup_content;
 
             $popup_close.off("click." + plugin_suffix);
 
-            $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+            $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
             $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
 
             $old_popup_content.after($popup_content).promise().done(function() {
@@ -382,7 +383,7 @@
 
                 $popup_close = $popup_content.find("." + popup_close_class);
 
-                options.callbackAfterRender.call(self);
+                self.getOptions().callbackAfterRender.call(self);
 
                 if (typeof afterRerender === "function") {
                     afterRerender();
@@ -397,7 +398,7 @@
                 return this;
             }
 
-            options.callbackBeforeDestroy.call(this);
+            self.getOptions().callbackBeforeDestroy.call(this);
 
             for (var i = 0; i < hided_popups_list.length; i++) {
                 if (hided_popups_list[i] === this) {
@@ -408,8 +409,8 @@
 
             if (typeof (with_shell) !== "undefined" && with_shell) {
                 var destroy = function() {
-                    if (!options.isIframe) {
-                        if (options.isDetachable) {
+                    if (!self.getOptions().isIframe) {
+                        if (self.getOptions().isDetachable) {
                             $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
                         } else {
                             $popup_content.remove();
@@ -419,8 +420,8 @@
                         $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
-                    options.callbackAfterDestroy.call(self);
-                    options.callbackAfterClose.call(self);
+                    self.getOptions().callbackAfterDestroy.call(self);
+                    self.getOptions().callbackAfterClose.call(self);
                 };
 
                 $popup.off("click." + plugin_suffix);
@@ -440,13 +441,13 @@
                 is_open = false;
                 is_hided = false;
                 
-                if (!options.isIframe) {
+                if (!self.getOptions().isIframe) {
                     is_rendered = false;
                 }
             } else {
                 var destroy = function() {
-                    if (!options.isIframe) {
-                        if (options.isDetachable) {
+                    if (!self.getOptions().isIframe) {
+                        if (self.getOptions().isDetachable) {
                             $popup_content.detach().removeClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator + " " + popup_content_pseudohided_modificator + " " + popup_inner_destroy_modificator);
                         } else {
                             $popup_content.remove();
@@ -456,7 +457,7 @@
                         $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
-                    options.callbackAfterDestroy.call(self);
+                    self.getOptions().callbackAfterDestroy.call(self);
                     
                     if (typeof afterDestroy === "function") {
                         afterDestroy();
@@ -467,7 +468,7 @@
                 
                 if (is_hided) {
                     is_hided = false;
-                    if (!options.isIframe) {
+                    if (!self.getOptions().isIframe) {
                         is_rendered = false;
                     }
 
@@ -484,7 +485,7 @@
                     }
 
                     is_hided = false;
-                    if (!options.isIframe) {
+                    if (!self.getOptions().isIframe) {
                         is_rendered = false;
                     }
                 }
@@ -498,7 +499,7 @@
                 return this;
             }
 
-            options.callbackBeforeShow.call(self);
+            self.getOptions().callbackBeforeShow.call(self);
 
             for (var i = 0; i < hided_popups_list.length; i++) {
                 if (hided_popups_list[i] === this) {
@@ -512,10 +513,10 @@
                     $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, handleKeydown);
                     $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
                     $popup_close.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
-                        self.close.call(self, options.forceClosing.button);
+                        self.close.call(self, self.getOptions().forceClosing.button);
                     });
 
-                    options.callbackAfterShow.call(self);
+                    self.getOptions().callbackAfterShow.call(self);
                 };
 
                 if (whichTransitionEvent) {
@@ -531,7 +532,7 @@
                 is_hided = false;
             }
 
-            if (!options.isDetachable && !options.isIframe) {
+            if (!self.getOptions().isDetachable && !self.getOptions().isIframe) {
                 self._rerenderContent.call(self, function() {
                     show.call(self);
                 });
@@ -550,14 +551,14 @@
             function makeStealed() {
                 $popup_content.addClass(popup_content_hidedfull_modificator);
 
-                options.callbackAfterHide.call(self);
+                self.getOptions().callbackAfterHide.call(self);
 
                 if (typeof afterHide === "function") {
                     afterHide();
                 }
             }
 
-            options.callbackBeforeHide.call(self);
+            self.getOptions().callbackBeforeHide.call(self);
 
             $(document).off("keydown." + plugin_suffix);
             $popup.off("click." + plugin_suffix);
@@ -581,8 +582,8 @@
         
         
         /* Check if pre-render is needed */
-        if (options.isPrerendered) {
-            $popup_content = $(renderPopupContentDOM($template.html(), options.data));
+        if (self.getOptions().isPrerendered) {
+            $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
             $popup_close = $popup_content.find("." + popup_close_class);
             
             $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
