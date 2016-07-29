@@ -338,14 +338,12 @@
             };
             
             if (!options.isPrerendered) {
-                if (!options.isIframe) {
-                    if (options.isDetachable) {
-                        if (typeof $popup_content === "undefined") {
-                            $popup_content = $(renderPopupContentDOM($template.html(), options.data));
-                        }
-                    } else {
+                if (options.isDetachable || options.isIframe) {
+                    if (typeof $popup_content === "undefined") {
                         $popup_content = $(renderPopupContentDOM($template.html(), options.data));
                     }
+                } else {
+                    $popup_content = $(renderPopupContentDOM($template.html(), options.data));
                 }
             } else {
                 this.setOptions({
@@ -356,8 +354,8 @@
             if (is_open) {
                 $popup_content.addClass(popup_content_pseudohided_modificator);
             }
-
-            if (!options.isPrerendered && !options.isIframe) {
+            
+            if ((!options.isPrerendered && !options.isIframe) || (options.isIframe && !this.isRendered())) {
                 $popup_inner.append($popup_content).promise().done(function () {
                     afterRender.call(self);
                 });
@@ -441,7 +439,10 @@
 
                 is_open = false;
                 is_hided = false;
-                is_rendered = false;
+                
+                if (!options.isIframe) {
+                    is_rendered = false;
+                }
             } else {
                 var destroy = function() {
                     if (!options.isIframe) {
@@ -466,7 +467,9 @@
                 
                 if (is_hided) {
                     is_hided = false;
-                    is_rendered = false;
+                    if (!options.isIframe) {
+                        is_rendered = false;
+                    }
 
                     destroy.call(self);
                 } else {
@@ -481,7 +484,9 @@
                     }
 
                     is_hided = false;
-                    is_rendered = false;
+                    if (!options.isIframe) {
+                        is_rendered = false;
+                    }
                 }
             }
             
