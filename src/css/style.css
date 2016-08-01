@@ -2,7 +2,7 @@
 
 html.noscroll,
 html.noscroll body {
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .goodpopup {
@@ -43,7 +43,10 @@ html.noscroll body {
     font-size: 0;
     text-align: center;
     position: relative;
-    overflow: auto;
+    overflow: hidden;
+}
+.goodpopup_visible .goodpopup-inner {
+    overflow-y: auto;
 }
 .goodpopup-inner:after {
     content: '';
@@ -75,6 +78,7 @@ html.noscroll body {
 .goodpopup-inner-content-element_hided {
     opacity: 0;
     transform: scale(0.7);
+    overflow: hidden;
 }
 .goodpopup-inner-content-element_hidedfull {
     position: absolute;
