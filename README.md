@@ -2,7 +2,7 @@
 jQuery-плагин с хорошей разметкой попапа.
 
 ## Демо
-https://eugene-lazarev.github.io/good-popup/
+https://eugene-lazarev.github.io/jquery-goodpopup/
 
 ## Сборка
 `npm install && grunt`
