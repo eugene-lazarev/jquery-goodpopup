@@ -4,134 +4,287 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <title>GoodPopup by Evgeniy Lazarev</title>
-
-    <link href="build/css/style.min.css" rel="stylesheet" type="text/css"/>
+    <title>«Хороший попап» — jQuery-плагин от Евгения Лазарева</title>
 
     <!-- Demo styles -->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&subset=cyrillic" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i&subset=cyrillic" rel="stylesheet" type="text/css"/>
     <style>
         html,
         body {
-            font-family: "Helvetica Neue", "Arial", sans-serif;
-            font-size: 18px;
-            line-height: 1;
+            font-family: "Lora", "Georgia", serif;
+            font-size: 22px;
+            line-height: 1.25;
             background: #fff;
+            color: #010101;
             margin: 0;
             padding: 0;
             text-align: center;
         }
-
-        .button {
-            display: inline-block;
-            vertical-align: top;
-            background: #ffed30;
-            color: #403809;
-            text-shadow: 0 1px 0 #fffa47;
-            padding: 0.35em 0.75em 0.4em;
-            margin: 2em 1em;
-            border-radius: 0.2em;
-            cursor: pointer;
-            transition: background 0.2s;
+        button {
+            font-family: "Lora", "Georgia", serif;
+            font-size: inherit;
+            border: 0;
         }
-        .button:hover {
-            background: #fff827;
+        .overflow {
+            overflow: hidden;
+            min-width: 980px;
+        }
+        .wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        .link:link,
+        .link:active,
+        .link:visited {
+            color: #010101;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .link-inner {
+            font-size: 0.5em;
+            border-bottom: 1px solid #010101;
+            border-bottom-color: rgba(1, 1, 1, 0.2);
+            transition: border-color 0.2s;
+        }
+        .link-inner__text {
+            font-size: 2em;
+            line-height: normal;
+            cursor: pointer;
+        }
+        .link:hover {
+            color: #e60010;
             transition: none;
         }
+        .link:hover .link-inner {
+            border-bottom: 1px solid #e60010;
+            border-color: rgba(230, 0, 16, 0.2);
+            transition: none;
+        }
+        .header {
+            font-size: 2.25em;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.075em;
+            margin: 0;
+            padding: 0.75em 0 0.2em;
+        }
+        .header:after {
+            content: 'v2.0.0-beta.8';
+            color: #fff;
+            background: #8bd4ff;
+            font-size: 0.25em;
+            text-transform: none;
+            letter-spacing: 0;
+            white-space: nowrap;
+            margin: 0 0 0 0.5em;
+            padding: 0.2em 0.4em;
+            position: absolute;
+        }
+        .subheader {
+            font-style: italic;
+            margin: 0;
+            padding: 0 0 1.25em;
+        }
+        .author {
+            font-style: italic;
+            font-size: 0.75em;
+            padding: 1.25em 0 1.5em;
+            margin: 0 20%;
+            border-top: 1px solid #eeeeee;
+        }
+        .download {
+            padding: 0 0 1.25em;
+            margin: 0 20% 3em;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .download-button:link,
+        .download-button:active,
+        .download-button:visited {
+            display: inline-block;
+            vertical-align: top;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.25em 20px 0.35em 60px;
+            border-radius: 0.2em;
+            background: #010101;
+            position: relative;
+            transition: background 0.2s;
+        }
+        .download-button:hover {
+            background: #e60010;
+            transition: none;
+        }
+        .download-button:before {
+            content: '';
+            width: 32px;
+            position: absolute;
+            top: 0;
+            bottom: 0.1em;
+            margin-left: -44px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAArCAQAAABiU0bMAAACJ0lEQVRYw8WYTUhUURiGT4skDMFUxI22CEqTNlIILlwMbsdN0MafsI241GkRBIGKhQRZi0A3GiE4hMSgkgptRxFSAxEGnE2CUGg4XrNAsKfFNGnMz/3Oz4zv2Z73e957z++9ShmIWh7wijlieHjEmOUlXdSq/IsKQqyQTSuEqMgf/BKDHOAnjyGK84EPso1UO9x1jX+KrkZc4icx0cz54gEWXOD7sdG4Lb4JW923C/AVe5Wbwqt5jgu910e38JpNfuNKN3TgbazhWm+l8Gt8FBVcp5c+QmdaH72sZ+1/zGUJvpFfwicazegfzeEI+uMDGq80nLFCOIfjhR/+ltaY6gc45B1PaM6Gv8j3PAdIaYMeF7u9eQCANe7YvH77AAAdZ41z5xAAOlO2SoONxUUAuJ20dRsEmM4YYFqzyrekbUrQ9Vhy0WDBx5Wux0opPgsC7BOknua/LUBdxgB1BP71qaeVhG/dnxRJT/wP2ifqvKjuPcUP4YjFKRXDS4kLq04qPPGkEUbgihgPG4odjXm7JcBfYEuj4q7ik9bSifoGWNKqd6SY0Fy9OSMQ1ayWULRrb0NRZ3iIK0o4cRPBAA/zSineGBijlmOf0qPk/d9ESw7wcDVpH7aLYIxfPH2CmHkEYzxcPw1QxaFRiQgRY/zA/5PoJvsUUrPpy6iG1YLhI9m2kmcFwQ/k/gk5pnFCGlznaPA/0cpoY4xlvnCA56TtsUmEh+kf6n8A2DY0af0MwMQAAAAASUVORK5CYII=) no-repeat 0 50%;
+            background-size: 32px auto;
+        }
+        .header2 {
+            font-size: 1.5em;
+            font-weight: 400;
+            margin: 0;
+            padding: 0 5% 0.5em;
+        }
+        .play {
+            margin: 0 0 2em;
+            font-size: 0.75em;
+        }
+        .play-button {
+            display: inline-block;
+            vertical-align: top;
+            color: #fff;
+            padding: 0.25em 1em 0.35em;
+            border-radius: 1em;
+            cursor: pointer;
+            background: #010101;
+            transition: background 0.2s;
+        }
+        .play-button:hover {
+            background: #8bd4ff;
+            transition: none;
+        }
+        .code {
+            background: #ececec;
+            font-family: "Anonymous Pro", "Tahoma", sans-serif;
+            font-size: 0.75em;
+            color: #b0b0b0;
+            padding: 1em 1.5em;
+            margin: 0 0 3em;
+            overflow-x: auto;
+            text-align: left;
+            border-left: 2px solid #8bd4ff;
+        }
+        .code-highlight {
+            color: #010101;
+        }
+        .code-highlight__super {
+            color: #50c576;
+        }
+        .footer {
+            border-top: 1px solid #eeeeee;
+            font-size: 0.5em;
+            margin: 2em 0 0;
+            padding: 1.5em 0 2em;
+        }
+    </style>
 
-        .demo {
+    
+    
+    <!-- jQuery & Handlebars -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+    <!-- GoodPopup plugin -->
+    <link href="jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/>
+    <script src="jquery.goodpopup/js/script.min.js"></script>
+    
+    <!-- Popup inner content -->
+    <style>
+        .popup {
             background: #fff;
-            border-radius: 6px;
-            box-shadow: 1px 2px 5px -1px #000;
-            padding: 1em 2em;
+            padding: 10px 40px;
+            text-align: center;
         }
-        .demo-header {
+        .popup__header {
             font-size: 2em;
-            font-weight: 700;
-            margin: 0;
-            padding: 0 0 1em;
-            text-align: center;
-        }
-        .demo-input {
-            font-family: "Helvetica Neue", "Arial", sans-serif;
-            font-size: 18px;
-            line-height: 1;
-            width: 15em;
-            text-align: center;
-            border: 0;
-            border-bottom: 1px solid #FFBE29;
-            color: #FFBE29;
-            padding: 0.3em 0.5em;
-            margin: 0;
-            background: #fff;
-        }
-        .demo-input:focus {
-            outline: none;
         }
     </style>
 </head>
 <body>
-<div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
-<div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
-<div class="button js-button" data-popup-content="goodpopup3">img popup</div>
-<div class="button js-button" data-popup-content="goodpopup4">iframe popup</div>
-<div class="button js-button" data-popup-content="goodpopup5">iframe2 popup</div>
 
-<script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
-    <div class="demo">
-        <h1 class="demo-header">{{name}}</h1>
-        <input type="text" class="demo-input"/><br/>
-        <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
+<div class="overflow"><div class="wrapper">
+        
+    <h1 class="header">Хороший попап</h1>
+    <p class="subheader">Работает как положено. Даже в IE 8.</p>
+    <p class="author">jQuery-плагин от <a href="http://eugene-lazarev.ru" class="link"><span class="link-inner"><span class="link-inner__text">Евгения Лазарева</span></span></a></p>
+    
+    <div class="download">
+        <a href="#" class="download-button">Скачать плагин</a>
     </div>
-</script>
-<script id="goodpopup2" type="text/x-handlebars-template">
-    <div class="demo">
-        <h1 class="demo-header">{{name}}</h1>
-        <input type="text" class="demo-input"/><br/>
-        <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
+    
+    
+    <h2 class="header2">Базовый пример подключения и&nbsp;использования</h2>
+    <div class="play">
+        <button class="play-button" id="button">Открыть попап</button>
     </div>
-</script>
-<script id="goodpopup3" type="text/x-handlebars-template" data-is-prerendered="true" data-is-outer-click-closing="false">
-    <img src="https://pp.vk.me/c306802/v306802386/2f43/U21gA1fsRfk.jpg" alt="" style="max-width: 100%; vertical-align: top;"/>
-</script>
-<script id="goodpopup4" type="text/x-handlebars-template" data-is-prerendered="true" data-is-iframe="true" data-key-code-for-closing="false">
-    <iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/shop.xml?account=41001145324032&quickpay=shop&payment-type-choice=on&writer=seller&targets=%D0%97%D0%B0+%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD+GoodPopup&targets-hint=&default-sum=50&button-text=03&successURL=https%3A%2F%2Feugene-lazarev.github.io%2Fgood-popup%2F" width="450" height="198" style="vertical-align: top;"></iframe>
-</script>
-<script id="goodpopup5" type="text/x-handlebars-template" data-is-iframe="true" data-is-outer-click-closing="false">
-    <iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/shop.xml?account=41001145324032&quickpay=shop&payment-type-choice=on&writer=seller&targets=%D0%97%D0%B0+%D0%BF%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD+GoodPopup&targets-hint=&default-sum=50&button-text=03&successURL=https%3A%2F%2Feugene-lazarev.github.io%2Fgood-popup%2F" width="450" height="198" style="vertical-align: top;"></iframe>
-</script>
+    
+    <pre class="code">
+&lt;!doctype html>
+&lt;html>
+&lt;head>
+    &lt;!-- Зависимости: jQuery и Handlebars -->
+    <span class="code-highlight">&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">&lt;/script>
+    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js">&lt;/script></span>
 
-<!--[if IE 8]>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<![endif]-->
-<!--[if gt IE 8]><!-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<!--<![endif]-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    &lt;!-- Плагин: javascript и CSS -->
+    <span class="code-highlight">&lt;script src="jquery.goodpopup/js/script.min.js">&lt;/script>
+    &lt;link href="jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/></span>
+        
+    &lt;!-- Стилизуйте внутренний контент попапа как хотите -->
+    <span class="code-highlight">&lt;style>
+        .popup {
+            background: #fff;
+            padding: 10px 40px;
+            text-align: center;
+        }
+        .popup__header {
+            font-size: 2em;
+        }
+    &lt;/style></span>
+&lt;/head>
+&lt;body>
+    &lt;!-- Поставьте кнопку, по клику на которую будет открыт попап -->
+    <span class="code-highlight">&lt;button id="button">Открыть попап&lt;/button></span>
 
-<script src="build/js/script.min.js"></script>
+    &lt;!-- Создайте разметку внутреннего контента попапа в формате handlebars-шаблона, используя уникальный id -->
+    <span class="code-highlight">&lt;script id="<span class="code-highlight__super">demo-popup</span>" type="text/x-handlebars-template">
+        &lt;div class="popup">
+            &lt;h1 class="popup__header">Привет, я попап!&lt;/h1>
+        &lt;/div>
+    &lt;/script></span>
 
-<script>
-    $(function() {
-        $(document).on("click", ".js-button", function() {
-            var $this = $(this);
-            var GoodPopup = $.goodpopup($this.data("popupContent"));
-
-            GoodPopup
-                .setOptions({
-                    callbackAfterRender: function() {
-                        /* `this` is the instance of `GoodPopup` with all methods and options */
-                        this.getPopupContent().find("input").focus();
-                    },
-                    callbackAfterShow: function() {
-                        this.getPopupContent().find("input").focus();
-                    },
-                    data: {
-                        name: $this.text()
-                    }
-                })
-                .open();
+    &lt;!-- Повесьте обработчик клика на кнопку. Обратитесь к попапу по его id и откройте его, используя метод open() -->
+    <span class="code-highlight">&lt;script>
+        $(function() {
+            $("#button").on("click", function() {
+                $.goodpopup("<span class="code-highlight__super">demo-popup</span>").open();
+            });
         });
-    });
-</script>
+    &lt;/script></span>
+&lt;/body>
+&lt;/html></pre>
+    <script id="demo-popup" type="text/x-handlebars-template">
+        <div class="popup">
+            <h1 class="popup__header">Привет, я попап!</h1>
+        </div>
+    </script>
+
+    <!-- Откроем попап по клику на кнопку -->
+    <script>
+        $(function() {
+            $("#button").on("click", function() {
+                $.goodpopup("demo-popup").open();
+            });
+        });
+    </script>
+
+
+    <h2 class="header2">Удобный API позволяет всё контролировать</h2>
+    <p class="subheader">Подробнее — в документации <a href="https://github.com/eugene-lazarev/good-popup/blob/master/README.md" class="link"><span class="link-inner"><span class="link-inner__text">на Гитхабе</span></span></a></p>
+    
+    <div class="footer">
+        jQuery-плагин «Хороший попап», автор — Евгений Лазарев.<br/>
+        Актуальная версия: v2.0.0-beta.8
+    </div>
+        
+</div></div>
+
 </body>
 </html>

@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         cssmin: {
             main: {
                 files: {
-                    'build/css/style.min.css': 'src/css/style.css'
+                    'jquery.goodpopup/css/style.min.css': 'src/css/style.css'
                 }
             }
         },
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                     sourceMap: true
                 },
                 files: {
-                    'build/js/script.min.js': 'src/js/script.js'
+                    'jquery.goodpopup/js/script.min.js': 'src/js/script.js'
                 }
             }
         }
