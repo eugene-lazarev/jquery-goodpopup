@@ -305,6 +305,7 @@
                 $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
 
                 if (!is_open) {
+                    $("html").addClass("noscroll");
                     $popup.addClass(popup_active_modificator);
                     self.getOptions().callbackAfterOpen.call(self);
 
@@ -436,6 +437,8 @@
                 if (!helpers.whichTransitionEvent) {
                     destroy.call(self);
                 }
+
+                $("html").removeClass("noscroll");
 
                 is_open = false;
                 is_hided = false;
