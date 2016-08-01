@@ -621,5 +621,7 @@
         $("script[type='text/x-handlebars-template']").goodpopup();
     };
 
-    createPopupDOM().done(initPopupTemplates);
+    $(function() {
+        createPopupDOM().done(initPopupTemplates);
+    });
 }(jQuery));
