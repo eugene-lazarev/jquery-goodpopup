@@ -112,18 +112,6 @@
         callbackBeforeClose: function() {},
         callbackAfterClose: function() {},
 
-        callbackBeforeRender: function() {},
-        callbackAfterRender: function() {},
-
-        callbackBeforeDestroy: function() {},
-        callbackAfterDestroy: function() {},
-
-        callbackBeforeShow: function() {},
-        callbackAfterShow: function() {},
-
-        callbackBeforeHide: function() {},
-        callbackAfterHide: function() {},
-
         isPrerendered: false,
         isIframe: false,
         
@@ -202,6 +190,7 @@
                         $.each(popups_list, function(name, value) {
                             if (value.isRendered() && !value.isHided()) {
                                 value._hide(function() {
+                                    self.getOptions().callbackBeforeOpen.call(self);
                                     self._show.call(self);
                                 });
                                 return false;
@@ -214,6 +203,7 @@
                     $.each(popups_list, function(name, value) {
                         if (value.isRendered() && !value.isHided()) {
                             value._hide(function() {
+                                self.getOptions().callbackBeforeOpen.call(self);
                                 self._renderContent.call(self);
                             });
                             return false;
@@ -221,7 +211,7 @@
                     });
                 }
             } else {
-                self.getOptions().callbackBeforeOpen.call(this);
+                self.getOptions().callbackBeforeOpen.call(self);
                 self._renderContent.call(self);
             }
             
@@ -237,18 +227,17 @@
             
             if (hided_popups_list.length > 0) {
                 if (is_forced_closing) {
-                    self.getOptions().callbackBeforeClose.call(self);
                     for (var i = hided_popups_list.length; i > 0; i--) {
                         hided_popups_list[i - 1]._destroyContent(false);
                     }
                     this._destroyContent(true);
                 } else {
                     this._destroyContent(false, function() {
+                        hided_popups_list[hided_popups_list.length - 1].getOptions().callbackBeforeOpen.call(hided_popups_list[hided_popups_list.length - 1]);
                         hided_popups_list[hided_popups_list.length - 1]._show.call(hided_popups_list[hided_popups_list.length - 1]);
                     });
                 }
             } else {
-                self.getOptions().callbackBeforeClose.call(self);
                 this._destroyContent(true);
             }
             
@@ -292,8 +281,6 @@
             if (this.isRendered() && !self.getOptions().isIframe && !self.getOptions().isPrerendered) {
                 return this;
             }
-
-            self.getOptions().callbackBeforeRender.call(this);
             
             var afterRender = function() {
                 $popup_close = $popup_content.find("." + popup_close_class);
@@ -305,18 +292,28 @@
                 $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, handleOuterClick);
 
                 if (!is_open) {
+                    var makeVisible = function() {
+                        self.getOptions().callbackAfterOpen.call(self);
+                    };
+                    
                     $("html").addClass("noscroll");
+
+                    if (helpers.whichTransitionEvent) {
+                        $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
+                            makeVisible.call(self);
+                        });
+                    }
                     $popup.addClass(popup_active_modificator);
-                    self.getOptions().callbackAfterOpen.call(self);
+                    if (!helpers.whichTransitionEvent) {
+                        makeVisible.call(self);
+                    }
 
                     is_rendered = true;
                     is_hided = false;
                     is_open = true;
-
-                    self.getOptions().callbackAfterRender.call(self);
                 } else {
                     var makeVisible = function() {
-                        self.getOptions().callbackAfterRender.call(self);
+                        self.getOptions().callbackAfterOpen.call(self);
                     };
                     
                     if (helpers.whichTransitionEvent) {
@@ -369,8 +366,6 @@
         };
 
         this._rerenderContent = function(afterRerender) {
-            self.getOptions().callbackBeforeRender.call(this);
-
             var $old_popup_content = $popup_content;
 
             $popup_close.off("click." + plugin_suffix);
@@ -382,8 +377,6 @@
                 $old_popup_content.remove();
 
                 $popup_close = $popup_content.find("." + popup_close_class);
-
-                self.getOptions().callbackAfterRender.call(self);
 
                 if (typeof afterRerender === "function") {
                     afterRerender();
@@ -398,7 +391,7 @@
                 return this;
             }
 
-            self.getOptions().callbackBeforeDestroy.call(this);
+            self.getOptions().callbackBeforeClose.call(self);
 
             for (var i = 0; i < hided_popups_list.length; i++) {
                 if (hided_popups_list[i] === this) {
@@ -419,8 +412,7 @@
                     } else {
                         $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
-
-                    self.getOptions().callbackAfterDestroy.call(self);
+                    
                     self.getOptions().callbackAfterClose.call(self);
                 };
 
@@ -459,7 +451,7 @@
                         $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
-                    self.getOptions().callbackAfterDestroy.call(self);
+                    self.getOptions().callbackAfterClose.call(self);
                     
                     if (typeof afterDestroy === "function") {
                         afterDestroy();
@@ -501,8 +493,6 @@
                 return this;
             }
 
-            self.getOptions().callbackBeforeShow.call(self);
-
             for (var i = 0; i < hided_popups_list.length; i++) {
                 if (hided_popups_list[i] === this) {
                     hided_popups_list.splice(i, 1);
@@ -518,7 +508,7 @@
                         self.close.call(self, self.getOptions().forceClosing.button);
                     });
 
-                    self.getOptions().callbackAfterShow.call(self);
+                    self.getOptions().callbackAfterOpen.call(self);
                 };
 
                 if (helpers.whichTransitionEvent) {
@@ -550,17 +540,17 @@
                 return this;
             }
 
+            self.getOptions().callbackBeforeClose.call(self);
+
             function makeStealed() {
                 $popup_content.addClass(popup_content_hidedfull_modificator);
 
-                self.getOptions().callbackAfterHide.call(self);
+                self.getOptions().callbackAfterClose.call(self);
 
                 if (typeof afterHide === "function") {
                     afterHide();
                 }
             }
-
-            self.getOptions().callbackBeforeHide.call(self);
 
             $(document).off("keydown." + plugin_suffix);
             $popup.off("click." + plugin_suffix);
@@ -576,7 +566,7 @@
                 makeStealed.call(self);
             }
 
-            hided_popups_list.push(this);
+            hided_popups_list.push(self);
             is_hided = true;
 
             return this;

@@ -14,8 +14,8 @@ https://eugene-lazarev.github.io/good-popup/
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 
 <!-- Плагин -->
-<script src="build/js/script.min.js"></script>
-<link href="build/css/style.min.css" rel="stylesheet" type="text/css"/>
+<script src="jquery.goodpopup/js/script.min.js"></script>
+<link href="jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/>
 ```
 
 ## Использование
