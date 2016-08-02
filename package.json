@@ -1,17 +1,30 @@
 {
   "name": "jquery-goodpopup",
   "version": "2.0.0-beta.11",
+  "title": "jQuery Good Popup Plugin",
+  "description": "A popup that just works as expected. Even in IE8.",
+  "author": {
+    "name": "Evgeniy Lazarev",
+    "url": "https://eugene-lazarev.ru/"
+  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/eugene-lazarev/jquery-goodpopup.git"
   },
-  "license": "MIT",
+  "homepage": "https://eugene-lazarev.github.io/jquery-goodpopup/",
+  "keywords": [
+    "lightbox",
+    "popup",
+    "jQuery",
+    "jQuery-plugin"
+  ],
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-cssmin": "^1.0.1",
     "grunt-contrib-uglify": "^2.0.0"
   },
-  "dependencies": {
+  "peerDependencies": {
     "handlebars": "^4.0.5",
     "jquery": "^3.1.0"
   }
