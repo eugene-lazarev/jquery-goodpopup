@@ -101,9 +101,11 @@
             $popup_inner = $popup.find(popup_inner_selector);
         });
     };
+    
+    var closeButtonMarkup = '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAtElEQVRIx6WVyxXFIAgFbwkpkRLSiSVQkiXxFvm+HIGruFOYWYQAAABs6DAI2NNg6Niu64EbDI3C9cw+FQ9uMCiN34o3niv0k93xeYgVOshGoxUjvHkBpfD9CkqqGOF/ZY8VKR4rKNxX0LinmMA5RdoxUsNjBd2vUsPHhWM6NcRphYYfUWs1SBXcj6Qz+O680p3gRSZ6kVLkAyVUyPJIEx4PFOWxXl4s5dX2VujKcn0UurLef0f+APbXjsH9AAAAAElFTkSuQmCC" alt="" class="goodpopup-close__png"/>') + '</span>';
 
-    var renderPopupContentDOM = function(template_html, template_data) {
-        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAtElEQVRIx6WVyxXFIAgFbwkpkRLSiSVQkiXxFvm+HIGruFOYWYQAAABs6DAI2NNg6Niu64EbDI3C9cw+FQ9uMCiN34o3niv0k93xeYgVOshGoxUjvHkBpfD9CkqqGOF/ZY8VKR4rKNxX0LinmMA5RdoxUsNjBd2vUsPHhWM6NcRphYYfUWs1SBXcj6Qz+O680p3gRSZ6kVLkAyVUyPJIEx4PFOWxXl4s5dX2VujKcn0UurLef0f+APbXjsH9AAAAAElFTkSuQmCC" alt="" class="goodpopup-close__png"/>') + '</span>' + '</div>';
+    var renderPopupContentDOM = function(template_html, template_data, hasCloseButton) {
+        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(template_html)(typeof template_data !== "object" ? {} : template_data) + (hasCloseButton ? closeButtonMarkup : '') + '</div>';
     };
     
     var default_options = {
@@ -118,6 +120,7 @@
         
         isDetachable: false,
         isOuterClickClosing: true,
+        hasCloseButton: true,
 
         keyCodeForClosing: 27,
 
@@ -258,10 +261,28 @@
                 if (options_updated.hasOwnProperty("forceClosing") && !$.isPlainObject(options_updated["forceClosing"])) {
                     return throwError(popup_id, "WRONG_OPTIONS", options_updated);
                 }
-                $.extend(true, options, options_updated);
-            }
 
-            return this;
+                if (options_updated.hasOwnProperty("hasCloseButton") && options_updated["hasCloseButton"] != self.getOptions().hasCloseButton && self.getPopupContent()) {
+                    if (options_updated["hasCloseButton"]) {
+                        $popup_content.append(closeButtonMarkup);
+                        $popup_close = $popup_content.find("." + popup_close_class);
+                        $popup_close.on("click." + plugin_suffix, function() {
+                            self.close.call(self, self.getOptions().forceClosing.button);
+                        });
+                    } else {
+                        if (!$popup_close || $popup_close.length === 0) {
+                            $popup_close = $popup_content.find("." + popup_close_class);
+                        }
+                        $popup_close.remove();
+                    }
+                }
+                
+                $.extend(true, options, options_updated);
+
+                return this;
+            } else {
+                return throwError(popup_id, "WRONG_OPTIONS", options_updated);
+            }
         };
 
         this.getOptions = function() {
@@ -344,10 +365,10 @@
             if (!self.getOptions().isPrerendered) {
                 if (self.getOptions().isDetachable || self.getOptions().isIframe) {
                     if (typeof $popup_content === "undefined") {
-                        $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
+                        $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
                     }
                 } else {
-                    $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
+                    $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
                 }
             }
 
@@ -377,7 +398,7 @@
 
             $popup_close.off("click." + plugin_suffix);
 
-            $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
+            $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
             $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
 
             $old_popup_content.after($popup_content).promise().done(function() {
@@ -596,7 +617,7 @@
         
         /* Check if pre-render is needed */
         if (self.getOptions().isPrerendered) {
-            $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data));
+            $popup_content = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
             $popup_close = $popup_content.find("." + popup_close_class);
             
             $popup_content.addClass(popup_content_hided_modificator + " " + popup_content_hidedfull_modificator);
