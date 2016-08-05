@@ -150,6 +150,14 @@
             background: #8bd4ff;
             transition: none;
         }
+        .play-button:active,
+        .play-button:focus {
+            outline: none;
+        }
+        .play-button:active {
+            box-shadow: inset 0 3px 4px -3px #000;
+            padding: 0.3em 1em;
+        }
         .code {
             background: #ececec;
             font-family: "Anonymous Pro", "Tahoma", sans-serif;
@@ -189,11 +197,13 @@
     <style>
         .popup {
             background: #fff;
-            padding: 10px 40px;
+            padding: 30px 40px 35px;
             text-align: center;
         }
         .popup__header {
             font-size: 2em;
+            padding: 0;
+            margin: 0 0 1em;
         }
     </style>
 </head>
@@ -212,7 +222,7 @@
     
     <h2 class="header2">Базовый пример подключения и&nbsp;использования</h2>
     <div class="play">
-        <button class="play-button" id="button">Открыть попап</button>
+        <button class="play-button" id="button-1">Открыть попап №1</button>
     </div>
     
     <pre class="code">
@@ -231,46 +241,66 @@
     <span class="code-highlight">&lt;style>
         .popup {
             background: #fff;
-            padding: 10px 40px;
+            padding: 30px 40px 35px;
             text-align: center;
         }
         .popup__header {
             font-size: 2em;
+            padding: 0;
+            margin: 0 0 1em;
         }
     &lt;/style></span>
 &lt;/head>
 &lt;body>
     &lt;!-- Поставьте кнопку, по клику на которую будет открыт попап -->
-    <span class="code-highlight">&lt;button id="button">Открыть попап&lt;/button></span>
+    <span class="code-highlight">&lt;button id="button-1">Открыть попап №1&lt;/button></span>
 
-    &lt;!-- Создайте разметку внутреннего контента попапа в формате handlebars-шаблона, используя уникальный id -->
-    <span class="code-highlight">&lt;script id="<span class="code-highlight__super">demo-popup</span>" type="text/x-handlebars-template">
+    &lt;!-- Создайте разметку внутреннего контента попапов в формате handlebars-шаблона, используя уникальный id -->
+    <span class="code-highlight">&lt;script id="<span class="code-highlight__super">demo-popup-1</span>" type="text/x-handlebars-template">
         &lt;div class="popup">
-            &lt;h1 class="popup__header">Привет, я попап!&lt;/h1>
+            &lt;h1 class="popup__header">Привет, я попап №1!&lt;/h1>
+            &lt;button class="play-button" id="button-2">Открыть попап №2&lt;/button>
+        &lt;/div>
+    &lt;/script>
+    &lt;script id="<span class="code-highlight__super">demo-popup-2</span>" type="text/x-handlebars-template">
+        &lt;div class="popup">
+            &lt;h1 class="popup__header">Привет, я попап №2!&lt;/h1>
         &lt;/div>
     &lt;/script></span>
 
     &lt;!-- Повесьте обработчик клика на кнопку. Обратитесь к попапу по его id и откройте его, используя метод open() -->
     <span class="code-highlight">&lt;script>
         $(function() {
-            $("#button").on("click", function() {
-                $.goodpopup("<span class="code-highlight__super">demo-popup</span>").open();
+            $("#button-1").on("click", function() {
+                $.goodpopup("<span class="code-highlight__super">demo-popup-1</span>").open();
+            });
+            $(document).on("click", "#button-2", function() {
+                $.goodpopup("<span class="code-highlight__super">demo-popup-2</span>").open();
             });
         });
     &lt;/script></span>
 &lt;/body>
 &lt;/html></pre>
-    <script id="demo-popup" type="text/x-handlebars-template">
+    <script id="demo-popup-1" type="text/x-handlebars-template">
         <div class="popup">
-            <h1 class="popup__header">Привет, я попап!</h1>
+            <h1 class="popup__header">Привет, я попап №1!</h1>
+            <button class="play-button" id="button-2">Открыть попап №2</button>
+        </div>
+    </script>
+    <script id="demo-popup-2" type="text/x-handlebars-template">
+        <div class="popup">
+            <h1 class="popup__header">Привет, я попап №2!</h1>
         </div>
     </script>
 
     <!-- Откроем попап по клику на кнопку -->
     <script>
         $(function() {
-            $("#button").on("click", function() {
-                $.goodpopup("demo-popup").open();
+            $("#button-1").on("click", function() {
+                $.goodpopup("demo-popup-1").open();
+            });
+            $(document).on("click", "#button-2", function() {
+                $.goodpopup("demo-popup-2").open();
             });
         });
     </script>

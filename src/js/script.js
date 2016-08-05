@@ -39,6 +39,7 @@
                 "transition": "transitionend",
                 "OTransition": "oTransitionEnd",
                 "MozTransition": "transitionend",
+                "MSTransition" : "msTransitionEnd",
                 "WebkitTransition": "webkitTransitionEnd"
             };
     
@@ -299,8 +300,11 @@
                     $("html").addClass("noscroll");
 
                     if (helpers.whichTransitionEvent) {
-                        $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
-                            makeVisible.call(self);
+                        $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                            if (event.target === $popup[0]) {
+                                $popup.off(helpers.whichTransitionEvent + ".plugin_suffix");
+                                makeVisible.call(self);
+                            }
                         });
                     }
                     $popup.addClass(popup_active_modificator);
@@ -317,8 +321,11 @@
                     };
                     
                     if (helpers.whichTransitionEvent) {
-                        $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
-                            makeVisible.call(self);
+                        $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                            if (event.target === $popup_content[0]) {
+                                $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix");
+                                makeVisible.call(self);
+                            }
                         });
                     }
                     setTimeout(function() {
@@ -421,8 +428,11 @@
                 $popup_close.off("click." + plugin_suffix);
 
                 if (helpers.whichTransitionEvent) {
-                    $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
-                        destroy.call(self);
+                    $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                        if (event.target === $popup[0]) {
+                            $popup.off(helpers.whichTransitionEvent + ".plugin_suffix");
+                            destroy.call(self);
+                        }
                     });
                 }
                 $popup.removeClass(popup_active_modificator);
@@ -469,8 +479,11 @@
                     destroy.call(self);
                 } else {
                     if (helpers.whichTransitionEvent) {
-                        $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
-                            destroy.call(self);
+                        $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                            if (event.target === $popup_content[0]) {
+                                $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix");
+                                destroy.call(self);
+                            }
                         });
                     }
                     $popup_content.addClass(popup_inner_destroy_modificator);
@@ -510,13 +523,18 @@
 
                     self.getOptions().callbackAfterOpen.call(self);
                 };
-
+                
                 if (helpers.whichTransitionEvent) {
-                    $popup_inner.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
-                        makeRetrieved.call(self);
+                    $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                        if (event.target === $popup_content[0]) {
+                            $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix");
+                            makeRetrieved.call(self);
+                        }
                     });
                 }
-                $popup_content.removeClass(popup_content_hidedfull_modificator + " " + popup_content_hided_modificator);
+                setTimeout(function() {
+                    $popup_content.removeClass(popup_content_hidedfull_modificator + " " + popup_content_hided_modificator);
+                }, 1);
                 if (!helpers.whichTransitionEvent) {
                     makeRetrieved.call(self);
                 }
@@ -557,8 +575,11 @@
             $popup_close.off("click." + plugin_suffix);
 
             if (helpers.whichTransitionEvent) {
-                $popup_inner.off(helpers.whichTransitionEvent + ".plugin_suffix").one(helpers.whichTransitionEvent + ".plugin_suffix", function() {
-                    makeStealed.call(self);
+                $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                    if (event.target === $popup_content[0]) {
+                        $popup_content.off(helpers.whichTransitionEvent + ".plugin_suffix");
+                        makeStealed.call(self);
+                    }
                 });
             }
             $popup_content.addClass(popup_content_hided_modificator);
