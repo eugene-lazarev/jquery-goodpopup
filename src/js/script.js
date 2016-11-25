@@ -650,7 +650,7 @@
         return popupsList;
     };
     
-    $.goodpopup.version = "2.0.0-beta.13";
+    $.goodpopup.version = "2.0.0-beta.14";
 
 
     /* Init */
