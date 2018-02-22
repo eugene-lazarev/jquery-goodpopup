@@ -10,7 +10,8 @@ module.exports = function(grunt) {
         uglify: {
             main: {
                 options: {
-                    sourceMap: true
+                    sourceMap: true,
+                    ie8: true
                 },
                 files: {
                     'jquery.goodpopup/js/script.min.js': 'src/js/script.js'

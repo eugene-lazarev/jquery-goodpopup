@@ -28,7 +28,7 @@
             color: #403809;
             text-shadow: 0 1px 0 #fffa47;
             padding: 0.35em 0.75em 0.4em;
-            margin: 2em 1em;
+            margin: 2em 1em 0;
             border-radius: 0.2em;
             cursor: pointer;
             transition: background 0.2s;
@@ -40,9 +40,8 @@
 
         .demo {
             background: #fff;
-            border-radius: 6px;
             box-shadow: 1px 2px 5px -1px #000;
-            padding: 1em 2em;
+            padding: 1.5em 2em 2em;
         }
         .demo-header {
             font-size: 2em;
@@ -80,14 +79,14 @@
     <div class="demo">
         <h1 class="demo-header">{{name}}</h1>
         <input type="text" class="demo-input"/><br/>
-        <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
+        <div class="button js-button" data-popup-content="goodpopup2">show removable popup</div>
     </div>
 </script>
 <script id="goodpopup2" type="text/x-handlebars-template">
     <div class="demo">
         <h1 class="demo-header">{{name}}</h1>
         <input type="text" class="demo-input"/><br/>
-        <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
+        <div class="button js-button" data-popup-content="goodpopup1">show detachable popup</div>
     </div>
 </script>
 <script id="goodpopup3" type="text/x-handlebars-template" data-is-prerendered="true" data-is-outer-click-closing="false">
@@ -104,9 +103,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <![endif]-->
 <!--[if gt IE 8]><!-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!--<![endif]-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
 <script src="../jquery.goodpopup/js/script.min.js"></script>
 

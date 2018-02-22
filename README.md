@@ -10,8 +10,8 @@ https://eugene-lazarev.github.io/jquery-goodpopup/
 ## Установка
 ```html
 <!-- Зависимости: jQuery и Handlebars -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
 <!-- Плагин -->
 <script src="jquery.goodpopup/js/script.min.js"></script>

@@ -8,6 +8,7 @@
     var popupCloseClass = "js-goodpopup-close";
     var popupActiveModificator = "goodpopup_visible";
     var popupInnerDestroyModificator = "goodpopup-inner-content_destroyed";
+    var popupContentWithCloseButtonModificator = "goodpopup-inner-content-element_withclosebutton";
     var popupContentHidedModificator = "goodpopup-inner-content-element_hided";
     var popupContentHidedfullModificator = "goodpopup-inner-content-element_hidedfull";
     var popupContentPseudohidedModificator = "goodpopup-inner-content-element_pseudohided";
@@ -31,7 +32,6 @@
             
             return !!((typeof Modernizr === "object" && typeof Modernizr.inlinesvg === "boolean" && Modernizr.inlinesvg) || checkSVGSupport());
         })(),
-        
         whichTransitionEvent: (function() {
             var t;
             var el = document.createElement("div");
@@ -102,10 +102,10 @@
         });
     };
     
-    var closeButtonMarkup = '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAAtElEQVRIx6WVyxXFIAgFbwkpkRLSiSVQkiXxFvm+HIGruFOYWYQAAABs6DAI2NNg6Niu64EbDI3C9cw+FQ9uMCiN34o3niv0k93xeYgVOshGoxUjvHkBpfD9CkqqGOF/ZY8VKR4rKNxX0LinmMA5RdoxUsNjBd2vUsPHhWM6NcRphYYfUWs1SBXcj6Qz+O680p3gRSZ6kVLkAyVUyPJIEx4PFOWxXl4s5dX2VujKcn0UurLef0f+APbXjsH9AAAAAElFTkSuQmCC" alt="" class="goodpopup-close__png"/>') + '</span>';
+    var closeButtonMarkup = '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAD////////////////////////////////////////PIev5AAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==" alt="" class="goodpopup-close__png"/>') + '</span>';
 
     var renderPopupContentDOM = function(templateHTML, templateData, hasCloseButton) {
-        return '<div class="goodpopup-inner-content-element">' + Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? closeButtonMarkup : '') + '</div>';
+        return '<div class="goodpopup-inner-content-element ' + (hasCloseButton ? popupContentWithCloseButtonModificator : '') + '">' + Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? closeButtonMarkup : '') + '</div>';
     };
     
     var defaultOptions = {

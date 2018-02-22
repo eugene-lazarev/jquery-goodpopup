@@ -40,10 +40,10 @@ html.noscroll body {
 }
 .goodpopup-inner {
     height: 100%;
-    font-size: 0;
     text-align: center;
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
 }
 .goodpopup_visible .goodpopup-inner {
     overflow-y: auto;
@@ -58,10 +58,7 @@ html.noscroll body {
     display: inline-block;
     vertical-align: middle;
     position: relative;
-    font-size: 20px;
-    margin: 50px 0;
-    padding: 0 37px; /* 27px for close button + 10px gap */
-    max-width: 90%;
+    white-space: normal;
     opacity: 0;
     transform: scale(0.7);
     transition: opacity 0.25s ease, transform 0.25s ease;
@@ -72,9 +69,14 @@ html.noscroll body {
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .goodpopup-inner-content-element {
+    padding: 1em;
     opacity: 1;
     transform: scale(1);
     transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.goodpopup-inner-content-element_withclosebutton {
+    padding-right: 3.5em;
+    padding-left: 1.5em;
 }
 .goodpopup-inner-content-element_hided {
     opacity: 0;
@@ -83,7 +85,7 @@ html.noscroll body {
 .goodpopup-inner-content-element_hidedfull {
     position: absolute;
     top: -99999px;
-    left: -9999px;
+    left: -99999px;
     z-index: -1;
 }
 .goodpopup-inner-content-element_pseudohided {
@@ -99,22 +101,18 @@ html.noscroll body {
 }
 .goodpopup-close {
     position: absolute;
-    top: -21px;
-    right: -27px;
-    width: 26px;
-    height: 26px;
+    top: 1em;
+    right: 1em;
+    width: 1.5em;
     cursor: pointer;
-    background: #fff;
-    border-radius: 50%;
-    line-height: 1.1;
+    line-height: 1;
 }
 .goodpopup-close-svg {
-    vertical-align: middle;
-    width: 12px;
-    height: 12px;
+    vertical-align: top;
+    width: 100%;
 }
 .goodpopup-close-svg__path {
-    fill: #000;
+    fill: #fff;
     transition: fill 0.2s ease;
 }
 .goodpopup-close:hover .goodpopup-close-svg__path {
@@ -122,7 +120,6 @@ html.noscroll body {
     transition: none;
 }
 .goodpopup-close__png {
-    vertical-align: middle;
-    width: 12px;
-    height: 12px;
+    vertical-align: top;
+    width: 100%;
 }
