@@ -1,6 +1,6 @@
 {
   "name": "jquery-goodpopup",
-  "version": "2.0.0-beta.15",
+  "version": "2.0.0-beta.16",
   "title": "jQuery Good Popup Plugin",
   "description": "A popup that just works as expected. Even in IE8.",
   "author": {
@@ -26,6 +26,6 @@
   },
   "peerDependencies": {
     "handlebars": "^4.0.11",
-    "jquery": "^3.3.1"
+    "jquery": "^1.12.4"
   }
 }
