@@ -107,13 +107,13 @@
 <!--<![endif]-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
-<script src="../jquery.goodpopup/js/script.min.js"></script>
+<script src="../src/js/script.js"></script>
 
 <script>
     $(function() {
         $(document).on("click", ".js-button", function() {
             var $this = $(this);
-            var GoodPopup = $.goodpopup($this.data("popupContent"));
+            var GoodPopup = $.goodpopup.getPopup($this.data("popupContent"));
             
             var callback = function(name) {
                 if (typeof console !== "undefined" && typeof console.log === "function") {

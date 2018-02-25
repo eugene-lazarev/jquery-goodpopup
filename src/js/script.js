@@ -1,33 +1,40 @@
 (function($) {
     "use strict";
 
+    var version = "2.0.0-beta.15";
+
     var pluginSuffix = "goodpopup";
 
     var popupSelector = ".js-goodpopup";
     var popupInnerSelector = ".js-goodpopup-inner-content";
     var popupCloseClass = "js-goodpopup-close";
+    var popupClosePngClass = "goodpopup-close__png";
     var popupActiveModificator = "goodpopup_visible";
     var popupInnerDestroyModificator = "goodpopup-inner-content_destroyed";
     var popupContentWithCloseButtonModificator = "goodpopup-inner-content-element_withclosebutton";
+    var popupContentFullWidthModificator = "goodpopup-inner-content-element_fullwidth";
     var popupContentHidedModificator = "goodpopup-inner-content-element_hided";
     var popupContentHidedfullModificator = "goodpopup-inner-content-element_hidedfull";
     var popupContentPseudohidedModificator = "goodpopup-inner-content-element_pseudohided";
 
+    var pngCloseButtonWhite = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAD////////////////////////////////////////PIev5AAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
+    var pngCloseButtonBlack = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
+
     var $popup;
     var $popupInner;
-    
+
     var isOpen = false;
 
     var popupsList = {};
-    var hidedPopupsList = [];
-    
+    var hiddenPopupsList = [];
+
     var helpers = {
         isSVGSupported: (function() {
             function checkSVGSupport() {
                 /* https://css-tricks.com/a-complete-guide-to-svg-fallbacks/ */
                 var div = document.createElement("div");
                 div.innerHTML = "<svg/>";
-                return (div.firstChild && div.firstChild.namespaceURI) == "http://www.w3.org/2000/svg";
+                return ((div.firstChild && div.firstChild.namespaceURI) === "http://www.w3.org/2000/svg");
             }
             
             return !!((typeof Modernizr === "object" && typeof Modernizr.inlinesvg === "boolean" && Modernizr.inlinesvg) || checkSVGSupport());
@@ -50,541 +57,443 @@
             }
     
             return false;
-        })()
-    };
+        })(),
 
-    var throwError = function(popupName, errorType, additionalData) {
-        function showError(text) {
-            if (typeof console !== "undefined" && typeof console.error === "function") {
-                console.error(text);
-            } else {
-                alert(text);
-            }
-        }
-
-        function showTrace(text) {
-            if (typeof console !== "undefined" && typeof console.trace === "function") {
-                console.trace(text);
-            } else {
-                alert(text);
-            }
-        }
-
-        switch(errorType) {
-            case "NOT_FOUND":
-                var $popupTemplate = $("#" + popupName);
-                
-                if ($popupTemplate.length > 0) {
-                    showError("Please initialize popup `" + popupName + "`: `$('#" + popupName + "').goodpopup();`");
-                    return $popupTemplate;
+        throwError: function(popupId, errorType, additionalData) {
+            function showError(text) {
+                if (typeof console !== "undefined" && typeof console.error === "function") {
+                    console.error(text);
                 } else {
-                    showError("Popup template `" + popupName + "` doesn't exist");
-                    return popupName;
+                    alert(text);
                 }
-                break;
-            case "WRONG_OPTIONS":
-                showError("Wrong options object in method `setOptions` on popup `" + popupName + "`");
-                return additionalData;
-                break;
-            default:
-                showTrace("Problem with popup");
-                return popupName;
-                break;
+            }
+
+            function showTrace(text) {
+                if (typeof console !== "undefined" && typeof console.trace === "function") {
+                    console.trace(text);
+                } else {
+                    alert(text);
+                }
+            }
+
+            switch(errorType) {
+                case "NOT_FOUND":
+                    var $popupTemplate = $("#" + popupId);
+
+                    if ($popupTemplate.length > 0) {
+                        showError("Please initialize popup `" + popupId + "`: `$('#" + popupId + "').goodpopup();`");
+                        return $popupTemplate;
+                    } else {
+                        showError("Popup template `" + popupId + "` doesn't exist");
+                        return popupId;
+                    }
+                case "WRONG_OPTIONS":
+                    showError("Wrong options object in method `setOptions` on popup `" + popupId + "`");
+                    return additionalData;
+                default:
+                    showTrace("Problem with popup");
+                    return popupId;
+            }
         }
     };
 
-    var createPopupDOM = function() {
-        var popupHTML = '<div class="goodpopup js-goodpopup"><div class="goodpopup-inner"><div class="goodpopup-inner-content js-goodpopup-inner-content"></div></div></div>';
-
-        return $(popupHTML).appendTo("body").promise().done(function() {
-            $popup = $(popupSelector);
-            $popupInner = $popup.find(popupInnerSelector);
-        });
-    };
-    
-    var closeButtonMarkup = '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAD////////////////////////////////////////PIev5AAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==" alt="" class="goodpopup-close__png"/>') + '</span>';
-
-    var renderPopupContentDOM = function(templateHTML, templateData, hasCloseButton) {
-        return '<div class="goodpopup-inner-content-element ' + (hasCloseButton ? popupContentWithCloseButtonModificator : '') + '">' + Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? closeButtonMarkup : '') + '</div>';
-    };
-    
-    var defaultOptions = {
-        callbackBeforeOpen: function() {},
-        callbackAfterOpen: function() {},
-
-        callbackBeforeClose: function() {},
-        callbackAfterClose: function() {},
-
-        isPrerendered: false,
-        isIframe: false,
-        
-        isDetachable: false,
-        isOuterClickClosing: true,
-        hasCloseButton: true,
-
-        keyCodeForClosing: 27,
-
-        forceClosing: {
-            click: true,
-            keydown: true,
-            button: false
+    var dom = {
+        closeButtonMarkup: function(isFullWidth) {
+            return '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="' + (isFullWidth ? pngCloseButtonBlack : pngCloseButtonWhite) + '" alt="" class="' + popupClosePngClass + '"/>') + '</span>';
         },
+        createPopupDOM: function() {
+            var popupHTML = '<div class="goodpopup js-goodpopup"><div class="goodpopup-inner"><div class="goodpopup-inner-content js-goodpopup-inner-content"></div></div></div>';
 
-        data: {}
+            return $(popupHTML).appendTo("body").promise().done(function() {
+                $popup = $(popupSelector);
+                $popupInner = $popup.find(popupInnerSelector);
+            });
+        },
+        renderPopupContentDOM: function(popupId, templateHTML, templateData, hasCloseButton, isFullWidth) {
+            return '<div class="goodpopup-inner-content-element ' + (hasCloseButton ? popupContentWithCloseButtonModificator : '') + ' ' + (isFullWidth ? popupContentFullWidthModificator : '') + '" data-popup-id="' + popupId + '">' + Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? dom.closeButtonMarkup(isFullWidth) : '') + '</div>';
+        }
     };
 
-    $.fn.goodpopup = function(options) {
-        return this.each(function(i, element) {
-            var $this = $(element);
-            var thisID = $this.attr("id");
-            var PopupInstance = popupsList[thisID];
-            var optionsSet = $.extend(true, {}, defaultOptions, options, $this.data());
+    var handlers = {
+        "handleKeydown": function(event) {
+            var PopupInstance = this;
 
-            if (typeof PopupInstance === "undefined") {
-                popupsList[thisID] = new GoodPopup($this, optionsSet);
-            } else {
-                PopupInstance.setOptions(options);
-            }
-        });
-    };
+            var keyForClosing = PopupInstance.getOptions().keyCodeForClosing;
 
-    function GoodPopup($template, optionsSet) {
-        var self = this;
-        var popupID = $template.attr("id");
-        var options = $.extend(true, {}, optionsSet);
-
-        var isRendered = false;
-        var isHided = false;
-
-        var $popupClose;
-        var $popupContent;
-
-
-        /* Helpers */
-        function handleKeydown(event) {
-            var keyForClosing = self.getOptions().keyCodeForClosing;
-            
-            if (typeof keyForClosing === "number") {
-                self.setOptions({
-                    keyCodeForClosing: [keyForClosing]
-                });
-                keyForClosing = self.getOptions().keyCodeForClosing
-            }
-            
             for (var i = 0; i < keyForClosing.length; i++) {
                 if (event.keyCode === keyForClosing[i]) {
-                    self.close.call(self, self.getOptions().forceClosing.keydown);
+                    Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.keydown);
+                    break;
                 }
             }
-        }
 
-        function handleOuterClick(event) {
+            return PopupInstance;
+        },
+        "handleOuterClick": function(event) {
+            var PopupInstance = this;
+
             var $target = $(event.target);
-            if (self.getOptions().isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popupCloseClass)) {
-                self.close.call(self, self.getOptions().forceClosing.click);
+            if (PopupInstance.getOptions().isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popupCloseClass)) {
+                Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.click);
             }
+
+            return PopupInstance;
         }
-        
-        
-        /* API */
-        this.open = function() {
+    };
+
+    var Core = {
+        "open": function() {
+            var PopupInstance = this;
+
             if (isOpen) {
-                if (this.isRendered()) {
-                    if (this.isHided()) {
-                        $.each(popupsList, function(name, value) {
-                            if (value.isRendered() && !value.isHided()) {
-                                value._hide(function() {
-                                    self.getOptions().callbackBeforeOpen.call(self);
-                                    self._show.call(self);
+                if (PopupInstance.isRendered()) {
+                    if (PopupInstance.isHidden()) {
+                        $.each(popupsList, function(name, popup) {
+                            if (popup["instance"].isRendered() && !popup["instance"].isHidden()) {
+                                Core._hide.call(popup["instance"], function() {
+                                    PopupInstance.getOptions().callbackBeforeOpen.call(PopupInstance);
+                                    Core._show.call(PopupInstance);
                                 });
                                 return false;
                             }
                         });
                     } else {
-                        return this;
+                        return PopupInstance;
                     }
                 } else {
-                    $.each(popupsList, function(name, value) {
-                        if (value.isRendered() && !value.isHided()) {
-                            value._hide(function() {
-                                self.getOptions().callbackBeforeOpen.call(self);
-                                self._renderContent.call(self);
+                    $.each(popupsList, function(name, popup) {
+                        if (popup["instance"].isRendered() && !popup["instance"].isHidden()) {
+                            Core._hide.call(popup["instance"], function() {
+                                PopupInstance.getOptions().callbackBeforeOpen.call(PopupInstance);
+                                Core._renderContent.call(PopupInstance);
                             });
                             return false;
                         }
                     });
                 }
             } else {
-                self.getOptions().callbackBeforeOpen.call(self);
-                self._renderContent.call(self);
-            }
-            
-            return this;
-        };
-        
-        this.close = function(forcedClosing) {
-            if (!isOpen || !this.isRendered()) {
-                return this;
+                PopupInstance.getOptions().callbackBeforeOpen.call(PopupInstance);
+                Core._renderContent.call(PopupInstance);
             }
 
-            var isForcedClosing = forcedClosing || false;
-            
-            if (hidedPopupsList.length > 0) {
+            return PopupInstance;
+        },
+        "close": function(isForced) {
+            var PopupInstance = this;
+
+            if (!isOpen || !PopupInstance.isRendered()) {
+                return PopupInstance;
+            }
+
+            var isForcedClosing = isForced || false;
+
+            if (hiddenPopupsList.length > 0) {
                 if (isForcedClosing) {
-                    for (var i = hidedPopupsList.length; i > 0; i--) {
-                        hidedPopupsList[i - 1]._destroyContent(false);
+                    for (var i = hiddenPopupsList.length; i > 0; i--) {
+                        Core._destroyContent.call(hiddenPopupsList[i - 1]["instance"], false);
                     }
-                    this._destroyContent(true);
+                    Core._destroyContent.call(PopupInstance, true);
                 } else {
-                    this._destroyContent(false, function() {
-                        hidedPopupsList[hidedPopupsList.length - 1].getOptions().callbackBeforeOpen.call(hidedPopupsList[hidedPopupsList.length - 1]);
-                        hidedPopupsList[hidedPopupsList.length - 1]._show.call(hidedPopupsList[hidedPopupsList.length - 1]);
+                    Core._destroyContent.call(PopupInstance, false, function() {
+                        hiddenPopupsList[hiddenPopupsList.length - 1]["instance"].getOptions().callbackBeforeOpen.call(hiddenPopupsList[hiddenPopupsList.length - 1]["instance"]);
+                        Core._show.call(hiddenPopupsList[hiddenPopupsList.length - 1]["instance"]);
                     });
                 }
             } else {
-                this._destroyContent(true);
+                Core._destroyContent.call(PopupInstance, true);
             }
-            
-            return this;
-        };
 
-        this.isRendered = function() {
-            return isRendered;
-        };
-
-        this.isHided = function() {
-            return isHided;
-        };
-
-        this.setOptions = function(optionsUpdated) {
-            if ($.isPlainObject(optionsUpdated)) {
-                if (optionsUpdated.hasOwnProperty("forceClosing") && !$.isPlainObject(optionsUpdated["forceClosing"])) {
-                    return throwError(popupID, "WRONG_OPTIONS", optionsUpdated);
-                }
-
-                if (optionsUpdated.hasOwnProperty("hasCloseButton") && optionsUpdated["hasCloseButton"] != self.getOptions().hasCloseButton && self.getPopupContent()) {
-                    if (optionsUpdated["hasCloseButton"]) {
-                        $popupContent.append(closeButtonMarkup);
-                        $popupClose = $popupContent.find("." + popupCloseClass);
-                        $popupClose.on("click." + pluginSuffix, function() {
-                            self.close.call(self, self.getOptions().forceClosing.button);
-                        });
-                    } else {
-                        if (!$popupClose || $popupClose.length === 0) {
-                            $popupClose = $popupContent.find("." + popupCloseClass);
-                        }
-                        $popupClose.remove();
-                    }
-                }
-                
-                $.extend(true, options, optionsUpdated);
-
-                return this;
-            } else {
-                return throwError(popupID, "WRONG_OPTIONS", optionsUpdated);
-            }
-        };
-
-        this.getOptions = function() {
-            return options;
-        };
-
-        this.getPopupContent = function() {
-            return $popupContent;
-        };
-
-        this.getPopupId = function() {
-            return popupID;
-        };
+            return PopupInstance;
+        },
         
-        
-        /* Other methods */
-        this._renderContent = function() {
-            if (this.isRendered() && !self.getOptions().isIframe && !self.getOptions().isPrerendered) {
-                return this;
-            }
+        "_renderContent": function() {
+            var PopupInstance = this;
             
+            if (PopupInstance.isRendered() && !PopupInstance.getOptions().isIframe && !PopupInstance.getOptions().isPrerendered) {
+                return PopupInstance;
+            }
+
             var afterRender = function() {
-                $popupClose = $popupContent.find("." + popupCloseClass);
-                $popupClose.on("click." + pluginSuffix, function() {
-                    self.close.call(self, self.getOptions().forceClosing.button);
+                popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+                popupsList[PopupInstance.getPopupId()].$popupClose.on("click." + pluginSuffix, function() {
+                    Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.button);
                 });
 
-                $(document).off("keydown." + pluginSuffix).on("keydown." + pluginSuffix, handleKeydown);
-                $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, handleOuterClick);
+                $(document).off("keydown." + pluginSuffix).on("keydown." + pluginSuffix, function(event) { handlers.handleKeydown.call(PopupInstance, event); });
+                $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
 
                 if (!isOpen) {
-                    var makeVisible = function() {
-                        self.getOptions().callbackAfterOpen.call(self);
-                    };
-                    
                     $("html").addClass("noscroll");
 
                     if (helpers.whichTransitionEvent) {
                         $popup.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
                             if (event.target === $popup[0]) {
                                 $popup.off(helpers.whichTransitionEvent + ".pluginSuffix");
-                                makeVisible.call(self);
+                                PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                             }
                         });
                     }
                     $popup.addClass(popupActiveModificator);
                     if (!helpers.whichTransitionEvent) {
-                        makeVisible.call(self);
+                        PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                     }
 
-                    isRendered = true;
-                    isHided = false;
+                    popupsList[PopupInstance.getPopupId()].isRendered = true;
+                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+
                     isOpen = true;
                 } else {
-                    var makeVisible = function() {
-                        self.getOptions().callbackAfterOpen.call(self);
-                    };
-                    
                     if (helpers.whichTransitionEvent) {
-                        $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                            if (event.target === $popupContent[0]) {
-                                $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
-                                makeVisible.call(self);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
+                            if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
+                                popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                                PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                             }
                         });
                     }
                     setTimeout(function() {
-                        $popupContent.removeClass(popupContentPseudohidedModificator);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentPseudohidedModificator);
                     }, 1);
                     if (!helpers.whichTransitionEvent) {
-                        makeVisible.call(self);
+                        PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                     }
 
-                    isRendered = true;
-                    isHided = false;
+                    popupsList[PopupInstance.getPopupId()].isRendered = true;
+                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+
                     isOpen = true;
                 }
             };
-            
-            if (!self.getOptions().isPrerendered) {
-                if (self.getOptions().isDetachable || self.getOptions().isIframe) {
-                    if (typeof $popupContent === "undefined") {
-                        $popupContent = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
+
+            if (!PopupInstance.getOptions().isPrerendered) {
+                if (PopupInstance.getOptions().isDetachable || PopupInstance.getOptions().isIframe) {
+                    if (popupsList[PopupInstance.getPopupId()].$popupContent.length === 0) {
+                        popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
                     }
                 } else {
-                    $popupContent = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
+                    popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
                 }
             }
 
             if (isOpen) {
-                $popupContent.addClass(popupContentPseudohidedModificator);
+                popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentPseudohidedModificator);
             }
-            
-            if ((!self.getOptions().isPrerendered && !self.getOptions().isIframe) || (self.getOptions().isIframe && !this.isRendered())) {
-                $popupInner.append($popupContent).promise().done(function () {
-                    afterRender.call(self);
+
+            if ((!PopupInstance.getOptions().isPrerendered && !PopupInstance.getOptions().isIframe) || (PopupInstance.getOptions().isIframe && !PopupInstance.isRendered())) {
+                $popupInner.append(popupsList[PopupInstance.getPopupId()].$popupContent).promise().done(function () {
+                    afterRender();
                 });
             } else {
-                if (self.getOptions().isPrerendered) {
-                    this.setOptions({
+                if (PopupInstance.getOptions().isPrerendered) {
+                    PopupInstance.setOptions({
                         isPrerendered: false
                     });
                 }
-                $popupContent.removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
-                afterRender.call(self);
+                popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
+                afterRender();
             }
 
-            return this;
-        };
+            return PopupInstance;
+        },
+        "_rerenderContent": function(afterRerender) {
+            var PopupInstance = this;
 
-        this._rerenderContent = function(afterRerender) {
-            var $oldPopupContent = $popupContent;
+            var $oldPopupContent = popupsList[PopupInstance.getPopupId()].$popupContent;
 
-            $popupClose.off("click." + pluginSuffix);
+            popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
 
-            $popupContent = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
-            $popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
+            popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
+            popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
 
-            $oldPopupContent.after($popupContent).promise().done(function() {
+            $oldPopupContent.after(popupsList[PopupInstance.getPopupId()].$popupContent).promise().done(function() {
                 $oldPopupContent.remove();
 
-                $popupClose = $popupContent.find("." + popupCloseClass);
+                popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
 
                 if (typeof afterRerender === "function") {
                     afterRerender();
                 }
             });
-            
-            return this;
-        };
 
-        this._destroyContent = function(withShell, afterDestroy) {
-            if (!self.isRendered()) {
-                return this;
+            return PopupInstance;
+        },
+        "_destroyContent": function(withShell, afterDestroy) {
+            var PopupInstance = this;
+
+            if (!PopupInstance.isRendered()) {
+                return PopupInstance;
             }
 
-            self.getOptions().callbackBeforeClose.call(self);
+            PopupInstance.getOptions().callbackBeforeClose.call(PopupInstance);
 
-            for (var i = 0; i < hidedPopupsList.length; i++) {
-                if (hidedPopupsList[i] === this) {
-                    hidedPopupsList.splice(i, 1);
+            for (var i = 0; i < hiddenPopupsList.length; i++) {
+                if (hiddenPopupsList[i]["instance"] === PopupInstance) {
+                    hiddenPopupsList.splice(i, 1);
                     break;
                 }
             }
 
+            var destroy;
             if (typeof (withShell) !== "undefined" && withShell) {
-                var destroy = function() {
-                    if (!self.getOptions().isIframe) {
-                        if (self.getOptions().isDetachable) {
-                            $popupContent.detach().removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator + " " + popupContentPseudohidedModificator + " " + popupInnerDestroyModificator);
+                destroy = function() {
+                    if (!PopupInstance.getOptions().isIframe) {
+                        if (PopupInstance.getOptions().isDetachable) {
+                            popupsList[PopupInstance.getPopupId()].$popupContent.detach().removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator + " " + popupContentPseudohidedModificator + " " + popupInnerDestroyModificator);
                         } else {
-                            $popupContent.remove();
-                            $popupContent = undefined;
+                            popupsList[PopupInstance.getPopupId()].$popupContent.remove();
+                            popupsList[PopupInstance.getPopupId()].$popupContent = $();
                         }
                     } else {
-                        $popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator).removeClass(popupInnerDestroyModificator);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator).removeClass(popupInnerDestroyModificator);
                     }
-                    
-                    self.getOptions().callbackAfterClose.call(self);
+
+                    PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
                 };
 
                 $popup.off("click." + pluginSuffix);
                 $(document).off("keydown." + pluginSuffix);
-                $popupClose.off("click." + pluginSuffix);
+                popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
 
                 if (helpers.whichTransitionEvent) {
                     $popup.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
                         if (event.target === $popup[0]) {
                             $popup.off(helpers.whichTransitionEvent + ".pluginSuffix");
-                            destroy.call(self);
+                            destroy();
                         }
                     });
                 }
                 $popup.removeClass(popupActiveModificator);
                 if (!helpers.whichTransitionEvent) {
-                    destroy.call(self);
+                    destroy();
                 }
 
                 $("html").removeClass("noscroll");
 
                 isOpen = false;
-                isHided = false;
-                
-                if (!self.getOptions().isIframe) {
-                    isRendered = false;
+                popupsList[PopupInstance.getPopupId()].isHidden = false;
+
+                if (!PopupInstance.getOptions().isIframe) {
+                    popupsList[PopupInstance.getPopupId()].isRendered = false;
                 }
             } else {
-                var destroy = function() {
-                    if (!self.getOptions().isIframe) {
-                        if (self.getOptions().isDetachable) {
-                            $popupContent.detach().removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator + " " + popupContentPseudohidedModificator + " " + popupInnerDestroyModificator);
+                destroy = function() {
+                    if (!PopupInstance.getOptions().isIframe) {
+                        if (PopupInstance.getOptions().isDetachable) {
+                            popupsList[PopupInstance.getPopupId()].$popupContent.detach().removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator + " " + popupContentPseudohidedModificator + " " + popupInnerDestroyModificator);
                         } else {
-                            $popupContent.remove();
-                            $popupContent = undefined;
+                            popupsList[PopupInstance.getPopupId()].$popupContent.remove();
+                            popupsList[PopupInstance.getPopupId()].$popupContent = $();
                         }
                     } else {
-                        $popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator).removeClass(popupInnerDestroyModificator);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator).removeClass(popupInnerDestroyModificator);
                     }
 
-                    self.getOptions().callbackAfterClose.call(self);
-                    
+                    PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
+
                     if (typeof afterDestroy === "function") {
                         afterDestroy();
                     }
                 };
 
-                $popupClose.off("click." + pluginSuffix);
-                
-                if (isHided) {
-                    isHided = false;
-                    if (!self.getOptions().isIframe) {
-                        isRendered = false;
+                popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
+
+                if (popupsList[PopupInstance.getPopupId()].isHidden) {
+                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+                    if (!PopupInstance.getOptions().isIframe) {
+                        popupsList[PopupInstance.getPopupId()].isRendered = false;
                     }
 
-                    destroy.call(self);
+                    destroy();
                 } else {
                     if (helpers.whichTransitionEvent) {
-                        $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                            if (event.target === $popupContent[0]) {
-                                $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
-                                destroy.call(self);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
+                            if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
+                                popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                                destroy();
                             }
                         });
                     }
-                    $popupContent.addClass(popupInnerDestroyModificator);
+                    popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupInnerDestroyModificator);
                     if (!helpers.whichTransitionEvent) {
-                        destroy.call(self);
+                        destroy();
                     }
 
-                    isHided = false;
-                    if (!self.getOptions().isIframe) {
-                        isRendered = false;
+                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+                    if (!PopupInstance.getOptions().isIframe) {
+                        popupsList[PopupInstance.getPopupId()].isRendered = false;
                     }
                 }
             }
-            
-            return this;
-        };
 
-        this._show = function() {
-            if (!isHided) {
-                return this;
+            return PopupInstance;
+        },
+
+        "_show": function() {
+            var PopupInstance = this;
+
+            if (!PopupInstance.isHidden()) {
+                return PopupInstance;
             }
 
-            for (var i = 0; i < hidedPopupsList.length; i++) {
-                if (hidedPopupsList[i] === this) {
-                    hidedPopupsList.splice(i, 1);
+            for (var i = 0; i < hiddenPopupsList.length; i++) {
+                if (hiddenPopupsList[i]["instance"] === PopupInstance) {
+                    hiddenPopupsList.splice(i, 1);
                     break;
                 }
             }
-            
+
             function show() {
                 var makeRetrieved = function() {
-                    $(document).off("keydown." + pluginSuffix).on("keydown." + pluginSuffix, handleKeydown);
-                    $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, handleOuterClick);
-                    $popupClose.off("click." + pluginSuffix).on("click." + pluginSuffix, function() {
-                        self.close.call(self, self.getOptions().forceClosing.button);
+                    $(document).off("keydown." + pluginSuffix).on("keydown." + pluginSuffix, function(event) { handlers.handleKeydown.call(PopupInstance, event); });
+                    $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
+                    popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix).on("click." + pluginSuffix, function() {
+                        Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.button);
                     });
 
-                    self.getOptions().callbackAfterOpen.call(self);
+                    PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                 };
-                
+
                 if (helpers.whichTransitionEvent) {
-                    $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                        if (event.target === $popupContent[0]) {
-                            $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
-                            makeRetrieved.call(self);
+                    popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
+                        if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
+                            popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                            makeRetrieved();
                         }
                     });
                 }
                 setTimeout(function() {
-                    $popupContent.removeClass(popupContentHidedfullModificator + " " + popupContentHidedModificator);
+                    popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentHidedfullModificator + " " + popupContentHidedModificator);
                 }, 1);
                 if (!helpers.whichTransitionEvent) {
-                    makeRetrieved.call(self);
+                    makeRetrieved();
                 }
 
-                isHided = false;
+                popupsList[PopupInstance.getPopupId()].isHidden = false;
             }
 
-            if (!self.getOptions().isDetachable && !self.getOptions().isIframe) {
-                self._rerenderContent.call(self, function() {
-                    show.call(self);
+            if (!PopupInstance.getOptions().isDetachable && !PopupInstance.getOptions().isIframe) {
+                Core._rerenderContent.call(PopupInstance, function() {
+                    show();
                 });
             } else {
-                show.call(self);
+                show();
             }
 
-            return this;
-        };
-        
-        this._hide = function(afterHide) {
-            if (isHided) {
-                return this;
+            return PopupInstance;
+        },
+        "_hide": function(afterHide) {
+            var PopupInstance = this;
+
+            if (PopupInstance.isHidden()) {
+                return PopupInstance;
             }
 
-            self.getOptions().callbackBeforeClose.call(self);
+            PopupInstance.getOptions().callbackBeforeClose.call(PopupInstance);
 
             function makeStealed() {
-                $popupContent.addClass(popupContentHidedfullModificator);
+                popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedfullModificator);
 
-                self.getOptions().callbackAfterClose.call(self);
+                PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
 
                 if (typeof afterHide === "function") {
                     afterHide();
@@ -593,72 +502,192 @@
 
             $(document).off("keydown." + pluginSuffix);
             $popup.off("click." + pluginSuffix);
-            $popupClose.off("click." + pluginSuffix);
+            popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
 
             if (helpers.whichTransitionEvent) {
-                $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                    if (event.target === $popupContent[0]) {
-                        $popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
-                        makeStealed.call(self);
+                popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
+                    if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
+                        popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                        makeStealed();
                     }
                 });
             }
-            $popupContent.addClass(popupContentHidedModificator);
+            popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator);
             if (!helpers.whichTransitionEvent) {
-                makeStealed.call(self);
+                makeStealed();
             }
 
-            hidedPopupsList.push(self);
-            isHided = true;
+            hiddenPopupsList.push(popupsList[PopupInstance.getPopupId()]);
+            popupsList[PopupInstance.getPopupId()].isHidden = true;
 
-            return this;
-        };
-        
-        
-        /* Check if pre-render is needed */
-        if (self.getOptions().isPrerendered) {
-            $popupContent = $(renderPopupContentDOM($template.html(), self.getOptions().data, self.getOptions().hasCloseButton));
-            $popupClose = $popupContent.find("." + popupCloseClass);
-            
-            $popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
-            $popupInner.append($popupContent);
-            isRendered = true;
-            isHided = true;
+            return PopupInstance;
         }
+    };
 
+
+    /* Instance */
+    var GoodPopup = function($template, optionsObject) {
+        var PopupInstance = this;
+        var popupID = $template.attr("id");
+        var options = optionsObject;
+
+        /* Set API getters */
+        this.getOptions = function() { return options; };
+        this.getPopupId = function() { return popupID; };
+        this.getPopupContent = function() { return popupsList[PopupInstance.getPopupId()].$popupContent; };
+        this.getTemplate = function() { return $template; };
+        this.isRendered = function() { return popupsList[PopupInstance.getPopupId()].isRendered; };
+        this.isHidden = function() { return popupsList[PopupInstance.getPopupId()].isHidden; };
+
+        /* Set API setters */
+        this.setOptions = function(optionsUpdated) {
+            if ($.isPlainObject(optionsUpdated)) {
+                if (optionsUpdated.hasOwnProperty("forceClosing") && !$.isPlainObject(optionsUpdated["forceClosing"])) {
+                    return helpers.throwError(popupID, "WRONG_OPTIONS", optionsUpdated);
+                }
+
+                if (optionsUpdated.hasOwnProperty("hasCloseButton") && optionsUpdated["hasCloseButton"] !== PopupInstance.getOptions().hasCloseButton && PopupInstance.getPopupContent()) {
+                    if (optionsUpdated["hasCloseButton"]) {
+                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentWithCloseButtonModificator).append(dom.closeButtonMarkup(PopupInstance.getOptions().isFullWidth));
+                        popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+                        popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix).on("click." + pluginSuffix, function() {
+                            Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.button);
+                        });
+                    } else {
+                        if (!popupsList[PopupInstance.getPopupId()].$popupClose || popupsList[PopupInstance.getPopupId()].$popupClose.length === 0) {
+                            popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+                        }
+                        popupsList[PopupInstance.getPopupId()].$popupClose.remove();
+                        popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentWithCloseButtonModificator);
+                    }
+                }
+
+                if (optionsUpdated.hasOwnProperty("isFullWidth") && optionsUpdated["isFullWidth"] !== PopupInstance.getOptions().isFullWidth && PopupInstance.getPopupContent()) {
+                    if (optionsUpdated["isFullWidth"]) {
+                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentFullWidthModificator);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupClosePngClass).attr("src", pngCloseButtonBlack);
+                    } else {
+                        popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentFullWidthModificator);
+                        popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupClosePngClass).attr("src", pngCloseButtonWhite);
+                    }
+                }
+
+                if (optionsUpdated.hasOwnProperty("keyForClosing") && optionsUpdated["keyCodeForClosing"] !== PopupInstance.getOptions().keyCodeForClosing) {
+                    if (typeof optionsUpdated["keyCodeForClosing"] === "number") {
+                        optionsUpdated["keyCodeForClosing"] = [optionsUpdated["keyCodeForClosing"]];
+                    }
+                }
+
+                options = $.extend({}, options, optionsUpdated);
+
+                return PopupInstance;
+            } else {
+                return helpers.throwError(popupID, "WRONG_OPTIONS", optionsUpdated);
+            }
+        };
+
+        /* Set API methods */
+        this.open = function() { return Core.open.call(this); };
+        this.close = function(isForced) { return Core.close.call(this, isForced); };
+
+
+        /* Check if pre-render is needed */
+        if (PopupInstance.getOptions().isPrerendered) {
+            popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
+            popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+
+            popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
+            $popupInner.append(popupsList[PopupInstance.getPopupId()].$popupContent);
+
+            popupsList[PopupInstance.getPopupId()].isRendered = true;
+            popupsList[PopupInstance.getPopupId()].isHidden = true;
+        }
 
         /* Set data to DOM elements */
-        $template.data("goodpopup", this);
-        
+        PopupInstance.getTemplate().data("goodpopup", PopupInstance);
 
-        return this;
-    }
+        return PopupInstance;
+    };
 
-    $.goodpopup = function(popupName) {
-        if (typeof popupsList[popupName] !== "undefined") {
-            return popupsList[popupName];
-        } else {
-            if (typeof popupName !== "undefined") {
-                return throwError(popupName, "NOT_FOUND");
+    /* Global object */
+    $.goodpopup = {
+        getPopup: function(popupId) {
+            if (typeof popupsList[popupId] !== "undefined" && typeof popupsList[popupId]["instance"] !== "undefined") {
+                return popupsList[popupId]["instance"];
             } else {
-                return this;
+                if (typeof popupId !== "undefined") {
+                    return helpers.throwError(popupId, "NOT_FOUND");
+                } else {
+                    return false;
+                }
             }
-        }
+        },
+        getPopups: function() {
+            return popupsList;
+        },
+        version: version
     };
 
-    $.goodpopup.getPopups = function() {
-        return popupsList;
+
+    /* jQuery */
+    $.fn.goodpopup = function(options) {
+        return this.each(function(i, element) {
+            var $element = $(element);
+            var popupId = $element.attr("id");
+            var PopupInstance = typeof popupsList[popupId] !== "undefined" && typeof popupsList[popupId]["instance"] !== "undefined" ? popupsList[popupId]["instance"] : undefined;
+
+            if (typeof PopupInstance === "undefined") {
+                popupsList[popupId] = {
+                    instance: undefined,
+                    isRendered: false,
+                    isHidden: false,
+                    $popupClose: $(),
+                    $popupContent: $()
+                };
+                popupsList[popupId]["instance"] = new GoodPopup($element,
+                    $.extend(
+                        {},
+                        {
+                            /* Defaults */
+                            callbackBeforeOpen: function() {},
+                            callbackAfterOpen: function() {},
+
+                            callbackBeforeClose: function() {},
+                            callbackAfterClose: function() {},
+
+                            isPrerendered: false,
+                            isIframe: false,
+
+                            isDetachable: false,
+                            isOuterClickClosing: true,
+                            isFullWidth: false,
+                            hasCloseButton: true,
+
+                            keyCodeForClosing: [27],
+
+                            forceClosing: {
+                                click: true,
+                                keydown: true,
+                                button: false
+                            },
+
+                            data: {}
+                        },
+                        options,
+                        $element.data()
+                    )
+                );
+            } else {
+                PopupInstance.setOptions.call(PopupInstance, options);
+            }
+        });
     };
-    
-    $.goodpopup.version = "2.0.0-beta.15";
 
-
-    /* Init */
+    /* Autoload */
     var initPopupTemplates = function() {
-        $("script[type='text/x-handlebars-template']").goodpopup();
+        dom.createPopupDOM().done(function() {
+            $("script[type='text/x-handlebars-template']").goodpopup();
+        });
     };
-
-    $(function() {
-        createPopupDOM().done(initPopupTemplates);
-    });
+    $(initPopupTemplates);
 }(jQuery));
