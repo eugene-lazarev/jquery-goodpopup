@@ -28,6 +28,8 @@
     var popupsList = {};
     var hiddenPopupsList = [];
 
+    var scrollbarWidth = 0;
+
     var helpers = {
         isSVGSupported: (function() {
             function checkSVGSupport() {
@@ -58,6 +60,28 @@
     
             return false;
         })(),
+
+        calculateScrollbarWidth: function() {
+            var $outer;
+            var $inner;
+            var widthNoScroll;
+            var widthWithScroll;
+
+            $outer = $("<div>").css("position", "absolute").css("visibility", "hidden").css("width", "100px").css("msOverflowStyle", "scrollbar");
+            $("body").append($outer).promise().done(function() {
+                widthNoScroll = $outer.outerWidth();
+                $outer.css("overflow", "scroll");
+
+                $inner = $("<div>").css("width", "100%");
+                $outer.append($inner).promise().done(function() {
+                    widthWithScroll = $inner.innerWidth();
+
+                    $outer.remove();
+
+                    scrollbarWidth = widthNoScroll - widthWithScroll;
+                });
+            });
+        },
 
         throwError: function(popupId, errorType, additionalData) {
             function showError(text) {
@@ -110,9 +134,14 @@
             });
         },
         renderPopupContentDOM: function(popupId, templateHTML, templateData, hasCloseButton, isFullWidth) {
-            return '<div class="goodpopup-inner-content-element ' + (hasCloseButton ? popupContentWithCloseButtonModificator : '') + ' ' + (isFullWidth ? popupContentFullWidthModificator : '') + '" data-popup-id="' + popupId + '">' + Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? dom.closeButtonMarkup(isFullWidth) : '') + '</div>';
+            return '<div class="goodpopup-inner-content-element ' + (hasCloseButton ? popupContentWithCloseButtonModificator : '') + ' ' + (isFullWidth ? popupContentFullWidthModificator : '') + '" data-popup-id="' + popupId + '">' + dom.renderPopupContentTemplateDOM(templateHTML, templateData, hasCloseButton, isFullWidth) + '</div>';
+        },
+        renderPopupContentTemplateDOM: function(templateHTML, templateData, hasCloseButton, isFullWidth) {
+            return Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? dom.closeButtonMarkup(isFullWidth) : '')
         }
     };
+
+
 
     var handlers = {
         "handleKeydown": function(event) {
@@ -223,7 +252,12 @@
                 $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
 
                 if (!isOpen) {
+                    var bodyWidth = $("body").width();
                     $("html").addClass("noscroll");
+
+                    if ($("body").width() > bodyWidth) {
+                        $("html").addClass("noscroll-margin").css("margin-right", (parseFloat($("html").css("margin-right")) + scrollbarWidth) + "px");
+                    }
 
                     if (helpers.whichTransitionEvent) {
                         $popup.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
@@ -368,6 +402,9 @@
                 }
 
                 $("html").removeClass("noscroll");
+                if ($("html").hasClass("noscroll-margin")) {
+                    $("html").css("margin-right", (parseFloat($("html").css("margin-right")) - scrollbarWidth) + "px").removeClass("noscroll-margin");
+                }
 
                 isOpen = false;
                 popupsList[PopupInstance.getPopupId()].isHidden = false;
@@ -685,6 +722,7 @@
 
     /* Autoload */
     var initPopupTemplates = function() {
+        helpers.calculateScrollbarWidth();
         dom.createPopupDOM().done(function() {
             $("script[type='text/x-handlebars-template']").goodpopup();
         });
