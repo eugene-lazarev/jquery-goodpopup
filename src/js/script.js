@@ -3,32 +3,32 @@
 
     var version = "2.0.0-beta.17";
 
-    var pluginSuffix = "goodpopup";
+    var plugin_suffix = "goodpopup";
 
-    var popupSelector = ".js-goodpopup";
-    var popupInnerSelector = ".js-goodpopup-inner-content";
-    var popupCloseClass = "js-goodpopup-close";
-    var popupClosePngClass = "goodpopup-close__png";
-    var popupActiveModificator = "goodpopup_visible";
-    var popupInnerDestroyModificator = "goodpopup-inner-content_destroyed";
-    var popupContentWithCloseButtonModificator = "goodpopup-inner-content-element_withclosebutton";
-    var popupContentFullWidthModificator = "goodpopup-inner-content-element_fullwidth";
-    var popupContentHidedModificator = "goodpopup-inner-content-element_hided";
-    var popupContentHidedfullModificator = "goodpopup-inner-content-element_hidedfull";
-    var popupContentPseudohidedModificator = "goodpopup-inner-content-element_pseudohided";
+    var popup_selector = ".js-goodpopup";
+    var popup_inner_selector = ".js-goodpopup-inner-content";
+    var popup_close_class = "js-goodpopup-close";
+    var popup_close_png_class = "goodpopup-close__png";
+    var popup_active_modificator = "goodpopup_visible";
+    var popup_inner_destroy_modificator = "goodpopup-inner-content_destroyed";
+    var popup_content_with_close_button_modificator = "goodpopup-inner-content-element_withclosebutton";
+    var popup_content_full_width_modificator = "goodpopup-inner-content-element_fullwidth";
+    var popup_content_hidden_modificator = "goodpopup-inner-content-element_hided";
+    var popup_content_hiddenfull_modificator = "goodpopup-inner-content-element_hidedfull";
+    var popup_content_pseudohidden_modificator = "goodpopup-inner-content-element_pseudohided";
 
-    var pngCloseButtonWhite = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAD////////////////////////////////////////PIev5AAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
-    var pngCloseButtonBlack = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
+    var png_close_button_white = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAD////////////////////////////////////////PIev5AAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
+    var png_close_button_black = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
 
     var $popup;
-    var $popupInner;
+    var $popup_inner;
 
-    var isOpen = false;
+    var is_open = false;
 
-    var popupsList = {};
-    var hiddenPopupsList = [];
+    var popups_list = {};
+    var hiddenpopups_list = [];
 
-    var scrollbarWidth = 0;
+    var scrollbar_width = 0;
 
     var helpers = {
         isSVGSupported: (function() {
@@ -64,26 +64,26 @@
         calculateScrollbarWidth: function() {
             var $outer;
             var $inner;
-            var widthNoScroll;
-            var widthWithScroll;
+            var width_without_scroll;
+            var width_with_scroll;
 
             $outer = $("<div>").css("position", "absolute").css("visibility", "hidden").css("width", "100px").css("msOverflowStyle", "scrollbar");
             $("body").append($outer).promise().done(function() {
-                widthNoScroll = $outer.outerWidth();
+                width_without_scroll = $outer.outerWidth();
                 $outer.css("overflow", "scroll");
 
                 $inner = $("<div>").css("width", "100%");
                 $outer.append($inner).promise().done(function() {
-                    widthWithScroll = $inner.innerWidth();
+                    width_with_scroll = $inner.innerWidth();
 
                     $outer.remove();
 
-                    scrollbarWidth = widthNoScroll - widthWithScroll;
+                    scrollbar_width = width_without_scroll - width_with_scroll;
                 });
             });
         },
 
-        throwError: function(popupId, errorType, additionalData) {
+        throwError: function(popup_id, error_type, additional_data) {
             function showError(text) {
                 if (typeof console !== "undefined" && typeof console.error === "function") {
                     console.error(text);
@@ -100,57 +100,57 @@
                 }
             }
 
-            switch(errorType) {
+            switch(error_type) {
                 case "NOT_FOUND":
-                    var $popupTemplate = $("#" + popupId);
-
-                    if ($popupTemplate.length > 0) {
-                        showError("Please initialize popup `" + popupId + "`: `$('#" + popupId + "').goodpopup();`");
-                        return $popupTemplate;
-                    } else {
-                        showError("Popup template `" + popupId + "` doesn't exist");
-                        return popupId;
-                    }
+                    showError("Popup template `" + popup_id + "` doesn't exist");
+                    return popup_id;
                 case "WRONG_OPTIONS":
-                    showError("Wrong options object in method `setOptions` on popup `" + popupId + "`");
-                    return additionalData;
+                    showError("Wrong options object in method `setOptions` on popup `" + popup_id + "`");
+                    return additional_data;
                 default:
                     showTrace("Problem with popup");
-                    return popupId;
+                    return popup_id;
             }
         }
     };
 
     var dom = {
-        closeButtonMarkup: function(isFullWidth) {
-            return '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="' + (isFullWidth ? pngCloseButtonBlack : pngCloseButtonWhite) + '" alt="" class="' + popupClosePngClass + '"/>') + '</span>';
+        closeButtonMarkup: function(is_full_width) {
+            return '<span class="goodpopup-close js-goodpopup-close">' + (helpers.isSVGSupported ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16" class="goodpopup-close-svg"><path class="goodpopup-close-svg__path" d="m15.8 13.5l-5.4-5.5 5.5-5.4c.2-.2.2-.6 0-.8l-1.6-1.6c-.1-.1-.3-.2-.4-.2-.2 0-.3.1-.4.2l-5.5 5.4-5.5-5.4c-.1-.1-.2-.2-.4-.2s-.3.1-.4.2l-1.5 1.5c-.2.2-.2.6 0 .8l5.4 5.5-5.5 5.5c0 .1-.1.2-.1.4 0 .2.1.3.2.4l1.6 1.6c.1.1.2.1.4.1.1 0 .3-.1.4-.2l5.4-5.4 5.4 5.5c.1.1.3.2.4.2.1 0 .3-.1.4-.2l1.6-1.6c.1-.1.2-.3.2-.4 0-.2-.1-.3-.2-.4"></path></svg>' : '<img src="' + (is_full_width ? png_close_button_black : png_close_button_white) + '" alt="" class="' + popup_close_png_class + '"/>') + '</span>';
         },
         createPopupDOM: function() {
-            var popupHTML = '<div class="goodpopup js-goodpopup"><div class="goodpopup-inner"><div class="goodpopup-inner-content js-goodpopup-inner-content"></div></div></div>';
+            var popup_html = '<div class="goodpopup js-goodpopup"><div class="goodpopup-inner"><div class="goodpopup-inner-content js-goodpopup-inner-content"></div></div></div>';
 
-            return $(popupHTML).appendTo("body").promise().done(function() {
-                $popup = $(popupSelector);
-                $popupInner = $popup.find(popupInnerSelector);
+            return $(popup_html).appendTo("body").promise().done(function() {
+                $popup = $(popup_selector);
+                $popup_inner = $popup.find(popup_inner_selector);
             });
         },
-        renderPopupContentDOM: function(popupId, templateHTML, templateData, hasCloseButton, isFullWidth) {
-            return '<div class="goodpopup-inner-content-element ' + (hasCloseButton ? popupContentWithCloseButtonModificator : '') + ' ' + (isFullWidth ? popupContentFullWidthModificator : '') + '" data-popup-id="' + popupId + '">' + dom.renderPopupContentTemplateDOM(templateHTML, templateData, hasCloseButton, isFullWidth) + '</div>';
+        renderPopupContentDOM: function(popup_id, $template, template_data, has_close_button, is_full_width) {
+            var $popup_content = $('<div class="goodpopup-inner-content-element ' + (has_close_button ? popup_content_with_close_button_modificator : '') + ' ' + (is_full_width ? popup_content_full_width_modificator : '') + '" data-popup-id="' + popup_id + '"></div>');
+            $popup_content.append(dom.renderPopupContentTemplateDOM($template, template_data)).append(has_close_button ? dom.closeButtonMarkup(is_full_width) : "");
+            return $popup_content;
         },
-        renderPopupContentTemplateDOM: function(templateHTML, templateData, hasCloseButton, isFullWidth) {
-            return Handlebars.compile(templateHTML)(typeof templateData !== "object" ? {} : templateData) + (hasCloseButton ? dom.closeButtonMarkup(isFullWidth) : '')
+        renderPopupContentTemplateDOM: function($template, template_data) {
+            var template_html;
+
+            if ($template.filter("script[type='text/x-handlebars-template']").length > 0) {
+                template_html = Handlebars.compile($template.html())(typeof template_data !== "object" ? {} : template_data);
+            } else {
+                template_html = $template.clone().removeAttr("id").attr("data-id", $template.attr("id"));
+            }
+
+            return template_html;
         }
     };
-
-
 
     var handlers = {
         "handleKeydown": function(event) {
             var PopupInstance = this;
+            var key_for_closing = PopupInstance.getOptions().keyCodeForClosing;
 
-            var keyForClosing = PopupInstance.getOptions().keyCodeForClosing;
-
-            for (var i = 0; i < keyForClosing.length; i++) {
-                if (event.keyCode === keyForClosing[i]) {
+            for (var i = 0; i < key_for_closing.length; i++) {
+                if (event.keyCode === key_for_closing[i]) {
                     Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.keydown);
                     break;
                 }
@@ -162,7 +162,7 @@
             var PopupInstance = this;
 
             var $target = $(event.target);
-            if (PopupInstance.getOptions().isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popupCloseClass)) {
+            if (PopupInstance.getOptions().isOuterClickClosing && $target.parents(".js-goodpopup-inner-content").length === 0 && !$target.hasClass(popup_close_class)) {
                 Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.click);
             }
 
@@ -174,10 +174,10 @@
         "open": function() {
             var PopupInstance = this;
 
-            if (isOpen) {
+            if (is_open) {
                 if (PopupInstance.isRendered()) {
                     if (PopupInstance.isHidden()) {
-                        $.each(popupsList, function(name, popup) {
+                        $.each(popups_list, function(name, popup) {
                             if (popup["instance"].isRendered() && !popup["instance"].isHidden()) {
                                 Core._hide.call(popup["instance"], function() {
                                     PopupInstance.getOptions().callbackBeforeOpen.call(PopupInstance);
@@ -190,7 +190,7 @@
                         return PopupInstance;
                     }
                 } else {
-                    $.each(popupsList, function(name, popup) {
+                    $.each(popups_list, function(name, popup) {
                         if (popup["instance"].isRendered() && !popup["instance"].isHidden()) {
                             Core._hide.call(popup["instance"], function() {
                                 PopupInstance.getOptions().callbackBeforeOpen.call(PopupInstance);
@@ -210,22 +210,22 @@
         "close": function(isForced) {
             var PopupInstance = this;
 
-            if (!isOpen || !PopupInstance.isRendered()) {
+            if (!is_open || !PopupInstance.isRendered()) {
                 return PopupInstance;
             }
 
             var isForcedClosing = isForced || false;
 
-            if (hiddenPopupsList.length > 0) {
+            if (hiddenpopups_list.length > 0) {
                 if (isForcedClosing) {
-                    for (var i = hiddenPopupsList.length; i > 0; i--) {
-                        Core._destroyContent.call(hiddenPopupsList[i - 1]["instance"], false);
+                    for (var i = hiddenpopups_list.length; i > 0; i--) {
+                        Core._destroyContent.call(hiddenpopups_list[i - 1]["instance"], false);
                     }
                     Core._destroyContent.call(PopupInstance, true);
                 } else {
                     Core._destroyContent.call(PopupInstance, false, function() {
-                        hiddenPopupsList[hiddenPopupsList.length - 1]["instance"].getOptions().callbackBeforeOpen.call(hiddenPopupsList[hiddenPopupsList.length - 1]["instance"]);
-                        Core._show.call(hiddenPopupsList[hiddenPopupsList.length - 1]["instance"]);
+                        hiddenpopups_list[hiddenpopups_list.length - 1]["instance"].getOptions().callbackBeforeOpen.call(hiddenpopups_list[hiddenpopups_list.length - 1]["instance"]);
+                        Core._show.call(hiddenpopups_list[hiddenpopups_list.length - 1]["instance"]);
                     });
                 }
             } else {
@@ -243,78 +243,78 @@
             }
 
             var afterRender = function() {
-                popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
-                popupsList[PopupInstance.getPopupId()].$popupClose.on("click." + pluginSuffix, function() {
+                popups_list[PopupInstance.getPopupId()].$popupClose = popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_class);
+                popups_list[PopupInstance.getPopupId()].$popupClose.on("click." + plugin_suffix, function() {
                     Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.button);
                 });
 
-                $(document).off("keydown." + pluginSuffix).on("keydown." + pluginSuffix, function(event) { handlers.handleKeydown.call(PopupInstance, event); });
-                $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
+                $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, function(event) { handlers.handleKeydown.call(PopupInstance, event); });
+                $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
 
-                if (!isOpen) {
+                if (!is_open) {
                     var bodyWidth = $("body").width();
                     $("html").addClass("noscroll");
 
                     if ($("body").width() > bodyWidth) {
-                        $("html").addClass("noscroll-margin").css("margin-right", (parseFloat($("html").css("margin-right")) + scrollbarWidth) + "px");
+                        $("html").addClass("noscroll-margin").css("margin-right", (parseFloat($("html").css("margin-right")) + scrollbar_width) + "px");
                     }
 
                     if (helpers.whichTransitionEvent) {
-                        $popup.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
+                        $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
                             if (event.target === $popup[0]) {
-                                $popup.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                                $popup.off(helpers.whichTransitionEvent + ".plugin_suffix");
                                 PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                             }
                         });
                     }
-                    $popup.addClass(popupActiveModificator);
+                    $popup.addClass(popup_active_modificator);
                     if (!helpers.whichTransitionEvent) {
                         PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                     }
 
-                    popupsList[PopupInstance.getPopupId()].isRendered = true;
-                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+                    popups_list[PopupInstance.getPopupId()].isRendered = true;
+                    popups_list[PopupInstance.getPopupId()].isHidden = false;
 
-                    isOpen = true;
+                    is_open = true;
                 } else {
                     if (helpers.whichTransitionEvent) {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                            if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
-                                popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                        popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                            if (event.target === popups_list[PopupInstance.getPopupId()].$popupContent[0]) {
+                                popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix");
                                 PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                             }
                         });
                     }
                     setTimeout(function() {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentPseudohidedModificator);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.removeClass(popup_content_pseudohidden_modificator);
                     }, 1);
                     if (!helpers.whichTransitionEvent) {
                         PopupInstance.getOptions().callbackAfterOpen.call(PopupInstance);
                     }
 
-                    popupsList[PopupInstance.getPopupId()].isRendered = true;
-                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+                    popups_list[PopupInstance.getPopupId()].isRendered = true;
+                    popups_list[PopupInstance.getPopupId()].isHidden = false;
 
-                    isOpen = true;
+                    is_open = true;
                 }
             };
 
             if (!PopupInstance.getOptions().isPrerendered) {
                 if (PopupInstance.getOptions().isDetachable || PopupInstance.getOptions().isIframe) {
-                    if (popupsList[PopupInstance.getPopupId()].$popupContent.length === 0) {
-                        popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
+                    if (popups_list[PopupInstance.getPopupId()].$popupContent.length === 0) {
+                        popups_list[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
                     }
                 } else {
-                    popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
+                    popups_list[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
                 }
             }
 
-            if (isOpen) {
-                popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentPseudohidedModificator);
+            if (is_open) {
+                popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_pseudohidden_modificator);
             }
 
             if ((!PopupInstance.getOptions().isPrerendered && !PopupInstance.getOptions().isIframe) || (PopupInstance.getOptions().isIframe && !PopupInstance.isRendered())) {
-                $popupInner.append(popupsList[PopupInstance.getPopupId()].$popupContent).promise().done(function () {
+                $popup_inner.append(popups_list[PopupInstance.getPopupId()].$popupContent).promise().done(function () {
                     afterRender();
                 });
             } else {
@@ -323,7 +323,7 @@
                         isPrerendered: false
                     });
                 }
-                popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
+                popups_list[PopupInstance.getPopupId()].$popupContent.removeClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator);
                 afterRender();
             }
 
@@ -332,17 +332,17 @@
         "_rerenderContent": function(afterRerender) {
             var PopupInstance = this;
 
-            var $oldPopupContent = popupsList[PopupInstance.getPopupId()].$popupContent;
+            var $old_popup_content = popups_list[PopupInstance.getPopupId()].$popupContent;
 
-            popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
+            popups_list[PopupInstance.getPopupId()].$popupClose.off("click." + plugin_suffix);
 
-            popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
-            popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
+            popups_list[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
+            popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator);
 
-            $oldPopupContent.after(popupsList[PopupInstance.getPopupId()].$popupContent).promise().done(function() {
-                $oldPopupContent.remove();
+            $old_popup_content.after(popups_list[PopupInstance.getPopupId()].$popupContent).promise().done(function() {
+                $old_popup_content.remove();
 
-                popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+                popups_list[PopupInstance.getPopupId()].$popupClose = popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_class);
 
                 if (typeof afterRerender === "function") {
                     afterRerender();
@@ -360,9 +360,9 @@
 
             PopupInstance.getOptions().callbackBeforeClose.call(PopupInstance);
 
-            for (var i = 0; i < hiddenPopupsList.length; i++) {
-                if (hiddenPopupsList[i]["instance"] === PopupInstance) {
-                    hiddenPopupsList.splice(i, 1);
+            for (var i = 0; i < hiddenpopups_list.length; i++) {
+                if (hiddenpopups_list[i]["instance"] === PopupInstance) {
+                    hiddenpopups_list.splice(i, 1);
                     break;
                 }
             }
@@ -372,57 +372,57 @@
                 destroy = function() {
                     if (!PopupInstance.getOptions().isIframe) {
                         if (PopupInstance.getOptions().isDetachable) {
-                            popupsList[PopupInstance.getPopupId()].$popupContent.detach().removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator + " " + popupContentPseudohidedModificator + " " + popupInnerDestroyModificator);
+                            popups_list[PopupInstance.getPopupId()].$popupContent.detach().removeClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator + " " + popup_content_pseudohidden_modificator + " " + popup_inner_destroy_modificator);
                         } else {
-                            popupsList[PopupInstance.getPopupId()].$popupContent.remove();
-                            popupsList[PopupInstance.getPopupId()].$popupContent = $();
+                            popups_list[PopupInstance.getPopupId()].$popupContent.remove();
+                            popups_list[PopupInstance.getPopupId()].$popupContent = $();
                         }
                     } else {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator).removeClass(popupInnerDestroyModificator);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
                     PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
                 };
 
-                $popup.off("click." + pluginSuffix);
-                $(document).off("keydown." + pluginSuffix);
-                popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
+                $popup.off("click." + plugin_suffix);
+                $(document).off("keydown." + plugin_suffix);
+                popups_list[PopupInstance.getPopupId()].$popupClose.off("click." + plugin_suffix);
 
                 if (helpers.whichTransitionEvent) {
-                    $popup.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
+                    $popup.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
                         if (event.target === $popup[0]) {
-                            $popup.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                            $popup.off(helpers.whichTransitionEvent + ".plugin_suffix");
                             destroy();
                         }
                     });
                 }
-                $popup.removeClass(popupActiveModificator);
+                $popup.removeClass(popup_active_modificator);
                 if (!helpers.whichTransitionEvent) {
                     destroy();
                 }
 
                 $("html").removeClass("noscroll");
                 if ($("html").hasClass("noscroll-margin")) {
-                    $("html").css("margin-right", (parseFloat($("html").css("margin-right")) - scrollbarWidth) + "px").removeClass("noscroll-margin");
+                    $("html").css("margin-right", (parseFloat($("html").css("margin-right")) - scrollbar_width) + "px").removeClass("noscroll-margin");
                 }
 
-                isOpen = false;
-                popupsList[PopupInstance.getPopupId()].isHidden = false;
+                is_open = false;
+                popups_list[PopupInstance.getPopupId()].isHidden = false;
 
                 if (!PopupInstance.getOptions().isIframe) {
-                    popupsList[PopupInstance.getPopupId()].isRendered = false;
+                    popups_list[PopupInstance.getPopupId()].isRendered = false;
                 }
             } else {
                 destroy = function() {
                     if (!PopupInstance.getOptions().isIframe) {
                         if (PopupInstance.getOptions().isDetachable) {
-                            popupsList[PopupInstance.getPopupId()].$popupContent.detach().removeClass(popupContentHidedModificator + " " + popupContentHidedfullModificator + " " + popupContentPseudohidedModificator + " " + popupInnerDestroyModificator);
+                            popups_list[PopupInstance.getPopupId()].$popupContent.detach().removeClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator + " " + popup_content_pseudohidden_modificator + " " + popup_inner_destroy_modificator);
                         } else {
-                            popupsList[PopupInstance.getPopupId()].$popupContent.remove();
-                            popupsList[PopupInstance.getPopupId()].$popupContent = $();
+                            popups_list[PopupInstance.getPopupId()].$popupContent.remove();
+                            popups_list[PopupInstance.getPopupId()].$popupContent = $();
                         }
                     } else {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator).removeClass(popupInnerDestroyModificator);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator).removeClass(popup_inner_destroy_modificator);
                     }
 
                     PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
@@ -432,32 +432,32 @@
                     }
                 };
 
-                popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
+                popups_list[PopupInstance.getPopupId()].$popupClose.off("click." + plugin_suffix);
 
-                if (popupsList[PopupInstance.getPopupId()].isHidden) {
-                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+                if (popups_list[PopupInstance.getPopupId()].isHidden) {
+                    popups_list[PopupInstance.getPopupId()].isHidden = false;
                     if (!PopupInstance.getOptions().isIframe) {
-                        popupsList[PopupInstance.getPopupId()].isRendered = false;
+                        popups_list[PopupInstance.getPopupId()].isRendered = false;
                     }
 
                     destroy();
                 } else {
                     if (helpers.whichTransitionEvent) {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                            if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
-                                popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                        popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                            if (event.target === popups_list[PopupInstance.getPopupId()].$popupContent[0]) {
+                                popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix");
                                 destroy();
                             }
                         });
                     }
-                    popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupInnerDestroyModificator);
+                    popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_inner_destroy_modificator);
                     if (!helpers.whichTransitionEvent) {
                         destroy();
                     }
 
-                    popupsList[PopupInstance.getPopupId()].isHidden = false;
+                    popups_list[PopupInstance.getPopupId()].isHidden = false;
                     if (!PopupInstance.getOptions().isIframe) {
-                        popupsList[PopupInstance.getPopupId()].isRendered = false;
+                        popups_list[PopupInstance.getPopupId()].isRendered = false;
                     }
                 }
             }
@@ -472,18 +472,18 @@
                 return PopupInstance;
             }
 
-            for (var i = 0; i < hiddenPopupsList.length; i++) {
-                if (hiddenPopupsList[i]["instance"] === PopupInstance) {
-                    hiddenPopupsList.splice(i, 1);
+            for (var i = 0; i < hiddenpopups_list.length; i++) {
+                if (hiddenpopups_list[i]["instance"] === PopupInstance) {
+                    hiddenpopups_list.splice(i, 1);
                     break;
                 }
             }
 
             function show() {
                 var makeRetrieved = function() {
-                    $(document).off("keydown." + pluginSuffix).on("keydown." + pluginSuffix, function(event) { handlers.handleKeydown.call(PopupInstance, event); });
-                    $popup.off("click." + pluginSuffix).on("click." + pluginSuffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
-                    popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix).on("click." + pluginSuffix, function() {
+                    $(document).off("keydown." + plugin_suffix).on("keydown." + plugin_suffix, function(event) { handlers.handleKeydown.call(PopupInstance, event); });
+                    $popup.off("click." + plugin_suffix).on("click." + plugin_suffix, function(event) { handlers.handleOuterClick.call(PopupInstance, event); });
+                    popups_list[PopupInstance.getPopupId()].$popupClose.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
                         Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.button);
                     });
 
@@ -491,21 +491,21 @@
                 };
 
                 if (helpers.whichTransitionEvent) {
-                    popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                        if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
-                            popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                    popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                        if (event.target === popups_list[PopupInstance.getPopupId()].$popupContent[0]) {
+                            popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix");
                             makeRetrieved();
                         }
                     });
                 }
                 setTimeout(function() {
-                    popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentHidedfullModificator + " " + popupContentHidedModificator);
+                    popups_list[PopupInstance.getPopupId()].$popupContent.removeClass(popup_content_hiddenfull_modificator + " " + popup_content_hidden_modificator);
                 }, 1);
                 if (!helpers.whichTransitionEvent) {
                     makeRetrieved();
                 }
 
-                popupsList[PopupInstance.getPopupId()].isHidden = false;
+                popups_list[PopupInstance.getPopupId()].isHidden = false;
             }
 
             if (!PopupInstance.getOptions().isDetachable && !PopupInstance.getOptions().isIframe) {
@@ -528,7 +528,7 @@
             PopupInstance.getOptions().callbackBeforeClose.call(PopupInstance);
 
             function makeStealed() {
-                popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedfullModificator);
+                popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hiddenfull_modificator);
 
                 PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
 
@@ -537,25 +537,25 @@
                 }
             }
 
-            $(document).off("keydown." + pluginSuffix);
-            $popup.off("click." + pluginSuffix);
-            popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix);
+            $(document).off("keydown." + plugin_suffix);
+            $popup.off("click." + plugin_suffix);
+            popups_list[PopupInstance.getPopupId()].$popupClose.off("click." + plugin_suffix);
 
             if (helpers.whichTransitionEvent) {
-                popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix").on(helpers.whichTransitionEvent + ".pluginSuffix", function(event) {
-                    if (event.target === popupsList[PopupInstance.getPopupId()].$popupContent[0]) {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".pluginSuffix");
+                popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix").on(helpers.whichTransitionEvent + ".plugin_suffix", function(event) {
+                    if (event.target === popups_list[PopupInstance.getPopupId()].$popupContent[0]) {
+                        popups_list[PopupInstance.getPopupId()].$popupContent.off(helpers.whichTransitionEvent + ".plugin_suffix");
                         makeStealed();
                     }
                 });
             }
-            popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator);
+            popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator);
             if (!helpers.whichTransitionEvent) {
                 makeStealed();
             }
 
-            hiddenPopupsList.push(popupsList[PopupInstance.getPopupId()]);
-            popupsList[PopupInstance.getPopupId()].isHidden = true;
+            hiddenpopups_list.push(popups_list[PopupInstance.getPopupId()]);
+            popups_list[PopupInstance.getPopupId()].isHidden = true;
 
             return PopupInstance;
         }
@@ -565,51 +565,51 @@
     /* Instance */
     var GoodPopup = function($template, optionsObject) {
         var PopupInstance = this;
-        var popupID = $template.attr("id");
+        var popup_id = $template.attr("id");
         var options = optionsObject;
 
         /* Set API getters */
         this.getOptions = function() { return options; };
-        this.getPopupId = function() { return popupID; };
-        this.getPopupContent = function() { return popupsList[PopupInstance.getPopupId()].$popupContent; };
+        this.getPopupId = function() { return popup_id; };
+        this.getPopupContent = function() { return popups_list[PopupInstance.getPopupId()].$popupContent; };
         this.getTemplate = function() { return $template; };
-        this.isRendered = function() { return popupsList[PopupInstance.getPopupId()].isRendered; };
-        this.isHidden = function() { return popupsList[PopupInstance.getPopupId()].isHidden; };
+        this.isRendered = function() { return popups_list[PopupInstance.getPopupId()].isRendered; };
+        this.isHidden = function() { return popups_list[PopupInstance.getPopupId()].isHidden; };
 
         /* Set API setters */
         this.setOptions = function(optionsUpdated) {
             if ($.isPlainObject(optionsUpdated)) {
                 if (optionsUpdated.hasOwnProperty("forceClosing") && !$.isPlainObject(optionsUpdated["forceClosing"])) {
-                    return helpers.throwError(popupID, "WRONG_OPTIONS", optionsUpdated);
+                    return helpers.throwError(popup_id, "WRONG_OPTIONS", optionsUpdated);
                 }
 
                 if (optionsUpdated.hasOwnProperty("hasCloseButton") && optionsUpdated["hasCloseButton"] !== PopupInstance.getOptions().hasCloseButton && PopupInstance.getPopupContent()) {
                     if (optionsUpdated["hasCloseButton"]) {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentWithCloseButtonModificator).append(dom.closeButtonMarkup(PopupInstance.getOptions().isFullWidth));
-                        popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
-                        popupsList[PopupInstance.getPopupId()].$popupClose.off("click." + pluginSuffix).on("click." + pluginSuffix, function() {
+                        popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_with_close_button_modificator).append(dom.closeButtonMarkup(PopupInstance.getOptions().isFullWidth));
+                        popups_list[PopupInstance.getPopupId()].$popupClose = popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_class);
+                        popups_list[PopupInstance.getPopupId()].$popupClose.off("click." + plugin_suffix).on("click." + plugin_suffix, function() {
                             Core.close.call(PopupInstance, PopupInstance.getOptions().forceClosing.button);
                         });
                     } else {
-                        if (!popupsList[PopupInstance.getPopupId()].$popupClose || popupsList[PopupInstance.getPopupId()].$popupClose.length === 0) {
-                            popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+                        if (!popups_list[PopupInstance.getPopupId()].$popupClose || popups_list[PopupInstance.getPopupId()].$popupClose.length === 0) {
+                            popups_list[PopupInstance.getPopupId()].$popupClose = popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_class);
                         }
-                        popupsList[PopupInstance.getPopupId()].$popupClose.remove();
-                        popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentWithCloseButtonModificator);
+                        popups_list[PopupInstance.getPopupId()].$popupClose.remove();
+                        popups_list[PopupInstance.getPopupId()].$popupContent.removeClass(popup_content_with_close_button_modificator);
                     }
                 }
 
                 if (optionsUpdated.hasOwnProperty("isFullWidth") && optionsUpdated["isFullWidth"] !== PopupInstance.getOptions().isFullWidth && PopupInstance.getPopupContent()) {
                     if (optionsUpdated["isFullWidth"]) {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentFullWidthModificator);
-                        popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupClosePngClass).attr("src", pngCloseButtonBlack);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_full_width_modificator);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_png_class).attr("src", png_close_button_black);
                     } else {
-                        popupsList[PopupInstance.getPopupId()].$popupContent.removeClass(popupContentFullWidthModificator);
-                        popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupClosePngClass).attr("src", pngCloseButtonWhite);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.removeClass(popup_content_full_width_modificator);
+                        popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_png_class).attr("src", png_close_button_white);
                     }
                 }
 
-                if (optionsUpdated.hasOwnProperty("keyForClosing") && optionsUpdated["keyCodeForClosing"] !== PopupInstance.getOptions().keyCodeForClosing) {
+                if (optionsUpdated.hasOwnProperty("key_for_closing") && optionsUpdated["keyCodeForClosing"] !== PopupInstance.getOptions().keyCodeForClosing) {
                     if (typeof optionsUpdated["keyCodeForClosing"] === "number") {
                         optionsUpdated["keyCodeForClosing"] = [optionsUpdated["keyCodeForClosing"]];
                     }
@@ -619,7 +619,7 @@
 
                 return PopupInstance;
             } else {
-                return helpers.throwError(popupID, "WRONG_OPTIONS", optionsUpdated);
+                return helpers.throwError(popup_id, "WRONG_OPTIONS", optionsUpdated);
             }
         };
 
@@ -630,14 +630,14 @@
 
         /* Check if pre-render is needed */
         if (PopupInstance.getOptions().isPrerendered) {
-            popupsList[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate().html(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
-            popupsList[PopupInstance.getPopupId()].$popupClose = popupsList[PopupInstance.getPopupId()].$popupContent.find("." + popupCloseClass);
+            popups_list[PopupInstance.getPopupId()].$popupContent = $(dom.renderPopupContentDOM(PopupInstance.getPopupId(), PopupInstance.getTemplate(), PopupInstance.getOptions().data, PopupInstance.getOptions().hasCloseButton, PopupInstance.getOptions().isFullWidth));
+            popups_list[PopupInstance.getPopupId()].$popupClose = popups_list[PopupInstance.getPopupId()].$popupContent.find("." + popup_close_class);
 
-            popupsList[PopupInstance.getPopupId()].$popupContent.addClass(popupContentHidedModificator + " " + popupContentHidedfullModificator);
-            $popupInner.append(popupsList[PopupInstance.getPopupId()].$popupContent);
+            popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator);
+            $popup_inner.append(popups_list[PopupInstance.getPopupId()].$popupContent);
 
-            popupsList[PopupInstance.getPopupId()].isRendered = true;
-            popupsList[PopupInstance.getPopupId()].isHidden = true;
+            popups_list[PopupInstance.getPopupId()].isRendered = true;
+            popups_list[PopupInstance.getPopupId()].isHidden = true;
         }
 
         /* Set data to DOM elements */
@@ -648,19 +648,29 @@
 
     /* Global object */
     $.goodpopup = {
-        getPopup: function(popupId) {
-            if (typeof popupsList[popupId] !== "undefined" && typeof popupsList[popupId]["instance"] !== "undefined") {
-                return popupsList[popupId]["instance"];
+        getPopup: function(popup_id) {
+            if (typeof popups_list[popup_id] !== "undefined" && typeof popups_list[popup_id]["instance"] !== "undefined") {
+                return popups_list[popup_id]["instance"];
             } else {
-                if (typeof popupId !== "undefined") {
-                    return helpers.throwError(popupId, "NOT_FOUND");
+                if (typeof popup_id !== "undefined") {
+                    var $popup_template = $("#" + popup_id);
+
+                    if ($popup_template.length === 0) {
+                        return helpers.throwError(popup_id, "NOT_FOUND");
+                    } else {
+                        $popup_template.goodpopup();
+                        return popups_list[popup_id]["instance"];
+                    }
                 } else {
                     return false;
                 }
             }
         },
         getPopups: function() {
-            return popupsList;
+            return popups_list;
+        },
+        getFactory: function() {
+            return GoodPopup;
         },
         version: version
     };
@@ -670,18 +680,18 @@
     $.fn.goodpopup = function(options) {
         return this.each(function(i, element) {
             var $element = $(element);
-            var popupId = $element.attr("id");
-            var PopupInstance = typeof popupsList[popupId] !== "undefined" && typeof popupsList[popupId]["instance"] !== "undefined" ? popupsList[popupId]["instance"] : undefined;
+            var popup_id = $element.attr("id");
+            var PopupInstance = typeof popups_list[popup_id] !== "undefined" && typeof popups_list[popup_id]["instance"] !== "undefined" ? popups_list[popup_id]["instance"] : undefined;
 
             if (typeof PopupInstance === "undefined") {
-                popupsList[popupId] = {
+                popups_list[popup_id] = {
                     instance: undefined,
                     isRendered: false,
                     isHidden: false,
                     $popupClose: $(),
                     $popupContent: $()
                 };
-                popupsList[popupId]["instance"] = new GoodPopup($element,
+                popups_list[popup_id]["instance"] = new GoodPopup($element,
                     $.extend(
                         {},
                         {

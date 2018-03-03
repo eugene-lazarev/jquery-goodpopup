@@ -21,6 +21,9 @@
             text-align: center;
         }
 
+        .buttons {
+            padding: 0 0 2em;
+        }
         .button {
             display: inline-block;
             vertical-align: top;
@@ -36,6 +39,14 @@
         .button:hover {
             background: #fff827;
             transition: none;
+        }
+
+        .template {
+            width: 20em;
+            background: #fff;
+            margin: 0 auto;
+            padding: 3em 2em;
+            box-shadow: 0.05em 0.05em 0.2em 0 rgba(0, 0, 0, 0.15);
         }
 
         .demo {
@@ -69,11 +80,18 @@
     </style>
 </head>
 <body>
-<div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
-<div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
-<div class="button js-button" data-popup-content="goodpopup3">img popup</div>
-<div class="button js-button" data-popup-content="goodpopup4">iframe popup</div>
-<div class="button js-button" data-popup-content="goodpopup5">iframe2 popup</div>
+<div class="buttons">
+    <div class="button js-button" data-popup-content="goodpopup1">detachable popup</div>
+    <div class="button js-button" data-popup-content="goodpopup2">removable popup</div>
+    <div class="button js-button" data-popup-content="goodpopup3">img popup</div>
+    <div class="button js-button" data-popup-content="goodpopup4">iframe popup</div>
+    <div class="button js-button" data-popup-content="goodpopup5">iframe2 popup</div>
+    <div class="button js-button" data-popup-content="goodpopup6">not Handlebars popup</div>
+</div>
+
+<div class="template" id="goodpopup6">
+    Hello,&nbsp;I'm&nbsp;a&nbsp;template&nbsp;from&nbsp;DOM, not&nbsp;Handlebars
+</div>
 
 <script id="goodpopup1" type="text/x-handlebars-template" data-is-detachable="true">
     <div class="demo">
@@ -107,7 +125,7 @@
 <!--<![endif]-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
-<script src="../src/js/script.js"></script>
+<script src="../jquery.goodpopup/js/script.min.js"></script>
 
 <script>
     $(function() {
@@ -136,9 +154,9 @@
                         callback.call(this, "callbackAfterClose");
                     },
                     
-                    data: {
+                    data: $.extend({}, GoodPopup.getOptions().data, {
                         name: $this.text()
-                    }
+                    })
                 })
                 .open();
         });
