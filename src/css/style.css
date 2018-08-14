@@ -3,6 +3,9 @@
 html.noscroll,
 html.noscroll body {
     overflow: hidden;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    pointer-events: none;
 }
 
 .goodpopup {
@@ -17,6 +20,10 @@ html.noscroll body {
     z-index: 9;
     opacity: 0;
     transition: opacity 0.25s ease, bottom 0.25s linear 0.25s;
+    -webkit-overflow-scrolling: touch;
+    touch-action: auto;
+    -webkit-touch-callout: default;
+    pointer-events: auto;
 }
 .goodpopup_visible {
     bottom: 0;
@@ -73,6 +80,7 @@ html.noscroll body {
     display: inline-block;
     vertical-align: top;
     padding: 1em;
+    position: relative;
     opacity: 1;
     transform: scale(1);
     transition: opacity 0.25s ease, transform 0.25s ease;
@@ -86,17 +94,17 @@ html.noscroll body {
     padding-left: 0;
     display: block;
 }
-.goodpopup-inner-content-element_hided {
+.goodpopup-inner-content-element_hidden {
     opacity: 0;
     transform: scale(0.7);
 }
-.goodpopup-inner-content-element_hidedfull {
+.goodpopup-inner-content-element_hiddenfull {
     position: absolute;
     top: -99999px;
     left: -99999px;
     z-index: -1;
 }
-.goodpopup-inner-content-element_pseudohided {
+.goodpopup-inner-content-element_pseudohidden {
     opacity: 0;
     transform: scale(0.7);
     transition: none;

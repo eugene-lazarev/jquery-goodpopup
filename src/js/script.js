@@ -13,9 +13,9 @@
     var popup_inner_destroy_modificator = "goodpopup-inner-content_destroyed";
     var popup_content_with_close_button_modificator = "goodpopup-inner-content-element_withclosebutton";
     var popup_content_full_width_modificator = "goodpopup-inner-content-element_fullwidth";
-    var popup_content_hidden_modificator = "goodpopup-inner-content-element_hided";
-    var popup_content_hiddenfull_modificator = "goodpopup-inner-content-element_hidedfull";
-    var popup_content_pseudohidden_modificator = "goodpopup-inner-content-element_pseudohided";
+    var popup_content_hidden_modificator = "goodpopup-inner-content-element_hidden";
+    var popup_content_hiddenfull_modificator = "goodpopup-inner-content-element_hiddenfull";
+    var popup_content_pseudohidden_modificator = "goodpopup-inner-content-element_pseudohidden";
 
     var png_close_button_white = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAD////////////////////////////////////////PIev5AAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
     var png_close_button_black = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMAMO9gn88Q369Agi28KgAAAQtJREFUeAGl10FOw1AMRVEnaZLi/S8YoY/0ACMOUt/w1+cOOqlaa9ve51X/3nX2vVX24ftrwb573757FIZfhfhV2MqrbfkUls8TNs7z4MI8//Hgwjw/u10YPufV7cL0WT1RgO+6Thf+8M9CAf5RhQL9+ggFeBTgUYBHgR6FPupzR8OjAI8CPAvyLsC7AM+CvQvza0GBHgV77LB3wd4FexfsXbB/PWDvgr0L9i7Ys2Df/faCxy8vPArwKMCjIH8cKMhXoUCPAj0K9CjYo2CPgj0K9tnjtwI9Cudl74I9Crc8CkWPQu3wKNy17fCzMP402c9CfAr2KcSnAD8K8SnQpxCfgn0K8Sns9inEvwMkUkuut7bS3AAAAABJRU5ErkJggg==";
@@ -26,7 +26,7 @@
     var is_open = false;
 
     var popups_list = {};
-    var hiddenpopups_list = [];
+    var popups_queue = [];
 
     var scrollbar_width = 0;
 
@@ -135,7 +135,9 @@
             var template_html;
 
             if ($template.filter("script[type='text/x-handlebars-template']").length > 0) {
-                template_html = Handlebars.compile($template.html())(typeof template_data !== "object" ? {} : template_data);
+                if (typeof window.Handlebars === "object") {
+                    template_html = Handlebars.compile($template.html())(typeof template_data !== "object" ? {} : template_data);
+                }
             } else {
                 template_html = $template.clone().removeAttr("id").attr("data-id", $template.attr("id"));
             }
@@ -216,21 +218,32 @@
 
             var isForcedClosing = isForced || false;
 
-            if (hiddenpopups_list.length > 0) {
+            if (popups_queue.length > 0) {
                 if (isForcedClosing) {
-                    for (var i = hiddenpopups_list.length; i > 0; i--) {
-                        Core._destroyContent.call(hiddenpopups_list[i - 1]["instance"], false);
+                    for (var i = popups_queue.length; i > 0; i--) {
+                        Core._destroyContent.call(popups_queue[i - 1]["instance"], false);
                     }
                     Core._destroyContent.call(PopupInstance, true);
                 } else {
                     Core._destroyContent.call(PopupInstance, false, function() {
-                        hiddenpopups_list[hiddenpopups_list.length - 1]["instance"].getOptions().callbackBeforeOpen.call(hiddenpopups_list[hiddenpopups_list.length - 1]["instance"]);
-                        Core._show.call(hiddenpopups_list[hiddenpopups_list.length - 1]["instance"]);
+                        popups_queue[popups_queue.length - 1]["instance"].getOptions().callbackBeforeOpen.call(popups_queue[popups_queue.length - 1]["instance"]);
+                        Core._show.call(popups_queue[popups_queue.length - 1]["instance"]);
                     });
                 }
             } else {
                 Core._destroyContent.call(PopupInstance, true);
             }
+
+            return PopupInstance;
+        },
+        "dequeue": function() {
+            var PopupInstance = this;
+
+            if (!is_open || !PopupInstance.isHidden() || !PopupInstance.isRendered()) {
+                return PopupInstance;
+            }
+
+            Core._destroyContent.call(this, false);
 
             return PopupInstance;
         },
@@ -257,6 +270,14 @@
 
                     if ($("body").width() > bodyWidth) {
                         $("html").addClass("noscroll-margin").css("margin-right", (parseFloat($("html").css("margin-right")) + scrollbar_width) + "px");
+                        $(".goodpopup-margin-right").each(function() {
+                            var $this = $(this);
+                            $this.css("margin-right", (parseFloat($this.css("margin-right")) + scrollbar_width) + "px");
+                        });
+                        $(".goodpopup-margin-left").each(function() {
+                            var $this = $(this);
+                            $this.css("margin-left", (parseFloat($this.css("margin-left")) - scrollbar_width) + "px");
+                        });
                     }
 
                     if (helpers.whichTransitionEvent) {
@@ -360,9 +381,9 @@
 
             PopupInstance.getOptions().callbackBeforeClose.call(PopupInstance);
 
-            for (var i = 0; i < hiddenpopups_list.length; i++) {
-                if (hiddenpopups_list[i]["instance"] === PopupInstance) {
-                    hiddenpopups_list.splice(i, 1);
+            for (var i = 0; i < popups_queue.length; i++) {
+                if (popups_queue[i]["instance"] === PopupInstance) {
+                    popups_queue.splice(i, 1);
                     break;
                 }
             }
@@ -379,6 +400,7 @@
                         }
                     } else {
                         popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator).removeClass(popup_inner_destroy_modificator);
+                        popups_list[PopupInstance.getPopupId()].isHidden = true;
                     }
 
                     PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
@@ -404,6 +426,14 @@
                 $("html").removeClass("noscroll");
                 if ($("html").hasClass("noscroll-margin")) {
                     $("html").css("margin-right", (parseFloat($("html").css("margin-right")) - scrollbar_width) + "px").removeClass("noscroll-margin");
+                    $(".goodpopup-margin-right").each(function() {
+                        var $this = $(this);
+                        $this.css("margin-right", (parseFloat($this.css("margin-right")) - scrollbar_width) + "px");
+                    });
+                    $(".goodpopup-margin-left").each(function() {
+                        var $this = $(this);
+                        $this.css("margin-left", (parseFloat($this.css("margin-left")) + scrollbar_width) + "px");
+                    });
                 }
 
                 is_open = false;
@@ -423,6 +453,7 @@
                         }
                     } else {
                         popups_list[PopupInstance.getPopupId()].$popupContent.addClass(popup_content_hidden_modificator + " " + popup_content_hiddenfull_modificator).removeClass(popup_inner_destroy_modificator);
+                        popups_list[PopupInstance.getPopupId()].isHidden = true;
                     }
 
                     PopupInstance.getOptions().callbackAfterClose.call(PopupInstance);
@@ -472,9 +503,9 @@
                 return PopupInstance;
             }
 
-            for (var i = 0; i < hiddenpopups_list.length; i++) {
-                if (hiddenpopups_list[i]["instance"] === PopupInstance) {
-                    hiddenpopups_list.splice(i, 1);
+            for (var i = 0; i < popups_queue.length; i++) {
+                if (popups_queue[i]["instance"] === PopupInstance) {
+                    popups_queue.splice(i, 1);
                     break;
                 }
             }
@@ -554,10 +585,8 @@
                 makeStealed();
             }
 
-            hiddenpopups_list.push(popups_list[PopupInstance.getPopupId()]);
+            popups_queue.push(popups_list[PopupInstance.getPopupId()]);
             popups_list[PopupInstance.getPopupId()].isHidden = true;
-
-            return PopupInstance;
         }
     };
 
@@ -626,6 +655,7 @@
         /* Set API methods */
         this.open = function() { return Core.open.call(this); };
         this.close = function(isForced) { return Core.close.call(this, isForced); };
+        this.dequeue = function() { return Core.dequeue.call(this); };
 
 
         /* Check if pre-render is needed */
@@ -669,8 +699,8 @@
         getPopups: function() {
             return popups_list;
         },
-        getFactory: function() {
-            return GoodPopup;
+        getQueue: function() {
+            return popups_queue;
         },
         version: version
     };

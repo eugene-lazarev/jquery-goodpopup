@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 
-    <title>«Хороший попап» — jQuery-плагин от Евгения Лазарева</title>
+    <title>«GoodPopup» — responsive jQuery popup plugin. Handcrafted by Evgeniy Lazarev</title>
 
-    <!-- Demo styles -->
+    <!-- Demo page styles -->
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&subset=cyrillic" rel="stylesheet" type="text/css"/>
     <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro:400,400i&subset=cyrillic" rel="stylesheet" type="text/css"/>
     <style>
@@ -21,6 +22,12 @@
             padding: 0;
             text-align: center;
         }
+        @media screen and (max-width: 767px) {
+            html,
+            body {
+                font-size: 18px;
+            }
+        }
         button {
             font-family: "Lora", "Georgia", serif;
             font-size: inherit;
@@ -28,12 +35,17 @@
         }
         .overflow {
             overflow: hidden;
-            min-width: 980px;
+            min-width: 320px;
         }
         .wrapper {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 40px;
+            padding: 0 2em;
+        }
+        @media screen and (max-width: 767px) {
+            .wrapper {
+                padding: 0 1em;
+            }
         }
         .link:link,
         .link:active,
@@ -69,11 +81,12 @@
             letter-spacing: 0.075em;
             margin: 0;
             padding: 0.75em 0 0.2em;
+            position: relative;
         }
         .header:after {
             content: 'v2.0.0-beta.18';
             color: #fff;
-            background: #8bd4ff;
+            background: #e60010;
             font-size: 0.25em;
             text-transform: none;
             letter-spacing: 0;
@@ -81,6 +94,18 @@
             margin: 0 0 0 0.5em;
             padding: 0.2em 0.4em;
             position: absolute;
+        }
+        @media screen and (max-width: 767px) {
+            .header {
+                padding: 0.5em 0 1em;
+            }
+            .header:after {
+                bottom: 1em;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                width: 8em;
+            }
         }
         .subheader {
             font-style: italic;
@@ -94,10 +119,21 @@
             margin: 0 20%;
             border-top: 1px solid #eeeeee;
         }
+        @media screen and (max-width: 767px) {
+            .author {
+                margin-right: 0;
+                margin-left: 0;
+            }
+        }
         .download {
             padding: 0 0 1.25em;
-            margin: 0 20% 3em;
+            margin: 0 20% 2em;
             border-bottom: 1px solid #eeeeee;
+        }
+        @media screen and (max-width: 767px) {
+            .download {
+                margin: 0 0 1.25em;
+            }
         }
         .download-button:link,
         .download-button:active,
@@ -106,7 +142,7 @@
             vertical-align: top;
             color: #fff;
             text-decoration: none;
-            padding: 0.25em 0.9em 0.35em 2.7em;
+            padding: 0.3em 0.9em 0.3em 2.7em;
             border-radius: 0.2em;
             background: #010101;
             position: relative;
@@ -126,38 +162,10 @@
             background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAArCAQAAABiU0bMAAACJ0lEQVRYw8WYTUhUURiGT4skDMFUxI22CEqTNlIILlwMbsdN0MafsI241GkRBIGKhQRZi0A3GiE4hMSgkgptRxFSAxEGnE2CUGg4XrNAsKfFNGnMz/3Oz4zv2Z73e957z++9ShmIWh7wijlieHjEmOUlXdSq/IsKQqyQTSuEqMgf/BKDHOAnjyGK84EPso1UO9x1jX+KrkZc4icx0cz54gEWXOD7sdG4Lb4JW923C/AVe5Wbwqt5jgu910e38JpNfuNKN3TgbazhWm+l8Gt8FBVcp5c+QmdaH72sZ+1/zGUJvpFfwicazegfzeEI+uMDGq80nLFCOIfjhR/+ltaY6gc45B1PaM6Gv8j3PAdIaYMeF7u9eQCANe7YvH77AAAdZ41z5xAAOlO2SoONxUUAuJ20dRsEmM4YYFqzyrekbUrQ9Vhy0WDBx5Wux0opPgsC7BOknua/LUBdxgB1BP71qaeVhG/dnxRJT/wP2ifqvKjuPcUP4YjFKRXDS4kLq04qPPGkEUbgihgPG4odjXm7JcBfYEuj4q7ik9bSifoGWNKqd6SY0Fy9OSMQ1ayWULRrb0NRZ3iIK0o4cRPBAA/zSineGBijlmOf0qPk/d9ESw7wcDVpH7aLYIxfPH2CmHkEYzxcPw1QxaFRiQgRY/zA/5PoJvsUUrPpy6iG1YLhI9m2kmcFwQ/k/gk5pnFCGlznaPA/0cpoY4xlvnCA56TtsUmEh+kf6n8A2DY0af0MwMQAAAAASUVORK5CYII=) no-repeat 0 50%;
             background-size: 1.45em auto;
         }
-        .header2 {
-            font-size: 1.5em;
-            font-weight: 400;
-            margin: 0;
-            padding: 0 5% 0.5em;
-        }
-        .play {
-            margin: 0 0 2em;
-            font-size: 0.75em;
-        }
-        .play-button {
-            display: inline-block;
-            vertical-align: top;
-            color: #fff;
-            padding: 0.25em 1em 0.35em;
-            border-radius: 1em;
-            cursor: pointer;
-            background: #010101;
-            transition: background 0.25s, box-shadow 0.25s;
-        }
-        .play-button:hover,
-        .play-button:active,
-        .play-button:focus {
-            background: #8bd4ff;
-            transition: none;
-        }
-        .play-button:active,
-        .play-button:focus {
-            padding: 0.3em 1em;
-            box-shadow: inset 0 0.15em 0.18em -0.15em #000;
-        }
         .code {
+            position: relative;
+        }
+        .code-pre {
             background: #ececec;
             font-family: "Anonymous Pro", "Tahoma", sans-serif;
             font-size: 0.75em;
@@ -166,13 +174,68 @@
             margin: 0 0 3em;
             overflow-x: auto;
             text-align: left;
-            border-left: 2px solid #8bd4ff;
+            border-left: 2px solid #e60010;
         }
         .code-highlight {
             color: #010101;
         }
         .code-highlight__super {
-            color: #50c576;
+            color: #e60010;
+        }
+        .code-link:link,
+        .code-link:active,
+        .code-link:visited {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 0.75em;
+            line-height: 1;
+            padding: 1em 2em 1em 1em;
+            text-decoration: none;
+            color: #e60010;
+            background: #dadada;
+            transition: background 0.25s, color 0.25s;
+        }
+        .code-link:hover {
+            background: #e60010;
+            color: #fff;
+            transition: none;
+        }
+        .code-link-svg {
+            position: absolute;
+            top: 0.75em;
+            right: 0.75em;
+            height: 0.75em;
+        }
+        .code-link-svg-g {
+            fill: #e60010;
+            transition: fill 0.25s;
+        }
+        .code-link:hover .code-link-svg-g {
+            fill: #fff;
+            transition: none;
+        }
+        @media screen and (max-width: 767px) {
+            .code-link:link,
+            .code-link:active,
+            .code-link:visited {
+                font-size: 0.6em;
+                padding: 0.5em 1em 0.6em;
+            }
+            .code-link-svg {
+                display: none;
+            }
+        }
+        .header2 {
+            font-size: 1.5em;
+            font-weight: 400;
+            margin: 0;
+            padding: 0 5% 0.5em;
+        }
+        @media screen and (max-width: 767px) {
+            .header2 {
+                padding: 0 0 1em;
+            }
         }
         .footer {
             border-top: 1px solid #eeeeee;
@@ -182,180 +245,146 @@
         }
     </style>
 
-    
-    
     <!-- jQuery & Handlebars -->
+    <!--[if IE 8]>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--<![endif]-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
     <!-- GoodPopup plugin -->
     <link href="jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/>
-    <script src="jquery.goodpopup/js/script.min.js"></script>
-    
-    <!-- Popup inner content -->
-    <style>
-        .popup {
-            background: #fff;
-            padding: 1.4em 1.8em 1.6em;
-            text-align: center;
-        }
-        .popup__header {
-            font-size: 2em;
-            padding: 0;
-            margin: 0;
-        }
-        .popup__button {
-            display: inline-block;
-            vertical-align: top;
-            color: #fff;
-            padding: 0.25em 1em 0.35em;
-            margin: 1.5em 0 0;
-            border-radius: 1em;
-            cursor: pointer;
-            background: #010101;
-            transition: background 0.25s, box-shadow 0.25s;
-        }
-        .popup__button:hover,
-        .popup__button:active,
-        .popup__button:focus {
-            background: #8bd4ff;
-            transition: none;
-        }
-        .popup__button:active,
-        .popup__button:focus {
-            padding: 0.3em 1em;
-            box-shadow: inset 0 0.15em 0.18em -0.15em #000;
-        }
-    </style>
+    <script src="src/js/script.js"></script>
 </head>
 <body>
 
 <div class="overflow"><div class="wrapper">
         
-    <h1 class="header">Хороший попап</h1>
-    <p class="subheader">Работает как положено. Даже в IE 8.</p>
-    <p class="author">jQuery-плагин от <a href="http://eugene-lazarev.ru" class="link"><span class="link-inner"><span class="link-inner__text">Евгения Лазарева</span></span></a></p>
+    <h1 class="header">GoodPopup</h1>
+    <p class="subheader">Works as expected. Even in&nbsp;IE&nbsp;8.</p>
+
+    <p class="author">jQuery-plugin from&nbsp;<a href="https://eugene-lazarev.ru" class="link"><span class="link-inner"><span class="link-inner__text">Evgeniy Lazarev</span></span></a></p>
     
-    <div class="download">
-        <a href="https://github.com/eugene-lazarev/jquery-goodpopup/raw/09165f753d7a721b55c0999879b63a6a10181f97/jquery.goodpopup/jquery.goodpopup_v2.0.0-beta.18.zip" class="download-button">Скачать плагин</a>
+    <div class="download" id="download">
+        <a href="https://github.com/eugene-lazarev/jquery-goodpopup/raw/09165f753d7a721b55c0999879b63a6a10181f97/jquery.goodpopup/jquery.goodpopup_v2.0.0-beta.18.zip" class="download-button">Get jquery-goodpopup as .zip</a>
     </div>
-    
-    <h2 class="header2">Базовый пример подключения и&nbsp;использования</h2>
-    <div class="play">
-        <button class="play-button" id="button-1">Открыть попап №1</button>
-    </div>
-    
-    <pre class="code">
+
+    <h2 class="header2">Quick start as simple as possible</h2>
+    <div class="code">
+        <pre class="code-pre">
 &lt;!doctype html>
 &lt;html>
 &lt;head>
-    &lt;!-- Зависимости: jQuery и Handlebars -->
-    <span class="code-highlight">&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">&lt;/script>
-    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js">&lt;/script></span>
+    &lt;!-- Dependencies: jQuery... -->
+    <span class="code-highlight">&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">&lt;/script></span>
+    &lt;!-- ...and Handlebars (not required; include only when you use its templates system for popups) -->
+    <span class="code-highlight">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js">&lt;/script></span>
 
-    &lt;!-- Плагин: javascript и CSS -->
+    &lt;!-- GoodPopup: JS & CSS -->
     <span class="code-highlight">&lt;script src="jquery.goodpopup/js/script.min.js">&lt;/script>
     &lt;link href="jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/></span>
-        
-    &lt;!-- Стилизуйте внутренний контент попапа как хотите -->
+
+    &lt;!-- Stylize your popup as you like -->
     <span class="code-highlight">&lt;style>
         .popup {
             background: #fff;
-            padding: 1.4em 1.8em 1.6em;
-            text-align: center;
-        }
-        .popup__header {
-            font-size: 2em;
-            padding: 0;
-        }
-        .popup__button {
-            display: inline-block;
-            vertical-align: top;
-            color: #fff;
-            padding: 0.25em 1em 0.35em;
-            margin: 1.5em 0 0;
-            border-radius: 1em;
-            cursor: pointer;
-            background: #010101;
-            transition: background 0.25s, box-shadow 0.25s;
-        }
-        .popup__button:hover,
-        .popup__button:active,
-        .popup__button:focus {
-            background: #8bd4ff;
-            transition: none;
-        }
-        .popup__button:active,
-        .popup__button:focus {
-            padding: 0.3em 1em;
-            box-shadow: inset 0 0.15em 0.18em -0.15em #000;
+            padding: 2em;
         }
     &lt;/style></span>
 &lt;/head>
 &lt;body>
-    &lt;!-- Поставьте кнопку, по клику на которую будет открыт попап -->
-    <span class="code-highlight">&lt;button id="button-1">Открыть попап №1&lt;/button></span>
+    &lt;!-- Click the button to open popup -->
+    <span class="code-highlight">&lt;button type="button">Click me&lt;/button></span>
 
-    &lt;!-- Создайте разметку внутреннего контента попапов в формате handlebars-шаблона, используя уникальный id -->
-    <span class="code-highlight">&lt;script id="<span class="code-highlight__super">demo-popup-1</span>" type="text/x-handlebars-template">
+    &lt;!-- Append handlebars-template with unique `id` as content of your popup -->
+    <span class="code-highlight">&lt;script id="<span class="code-highlight__super">my-popup</span>" type="text/x-handlebars-template">
         &lt;div class="popup">
-            &lt;h1 class="popup__header">Привет, я попап №1!&lt;/h1>
-            &lt;button class="popup__button" id="button-2">Открыть попап №2&lt;/button>
-        &lt;/div>
-    &lt;/script>
-    &lt;script id="<span class="code-highlight__super">demo-popup-2</span>" type="text/x-handlebars-template">
-        &lt;div class="popup">
-            &lt;h1 class="popup__header">Привет, я попап №2!&lt;/h1>
+            Hello, I am popup
         &lt;/div>
     &lt;/script></span>
 
-    &lt;!-- Повесьте обработчик клика на кнопку. Обратитесь к попапу по его id и откройте его, используя метод open() -->
+    &lt;!-- Listen `click` event on button to open your popup -->
     <span class="code-highlight">&lt;script>
         $(function() {
-            $("#button-1").on("click", function() {
-                $.goodpopup.getPopup("<span class="code-highlight__super">demo-popup-1</span>").open();
-            });
-            $(document).on("click", "#button-2", function() {
-                $.goodpopup.getPopup("<span class="code-highlight__super">demo-popup-2</span>").open();
+            $("button").on("click", function() {
+                $.goodpopup.getPopup("<span class="code-highlight__super">my-popup</span>").open();
             });
         });
     &lt;/script></span>
 &lt;/body>
 &lt;/html></pre>
-    <script id="demo-popup-1" type="text/x-handlebars-template">
-        <div class="popup">
-            <h1 class="popup__header">Привет, я попап №1!</h1>
-            <button class="popup__button" id="button-2">Открыть попап №2</button>
-        </div>
-    </script>
-    <script id="demo-popup-2" type="text/x-handlebars-template">
-        <div class="popup">
-            <h1 class="popup__header">Привет, я попап №2!</h1>
-        </div>
-    </script>
+        <a href="examples/quick-start.html" class="code-link">
+            Open example page
+            <svg class="code-link-svg" enable-background="new 0 0 48 48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <g class="code-link-svg-g" fill="#e60010" transform="translate(382 380)">
+                    <path d="m-360.3-351.4-2.3-2.3 25.8-25.7 2.2 2.2z"></path>
+                    <path d="m-334-362.9h-3.4v-13.7h-13.7v-3.4h17.1z"></path>
+                    <path d="m-342.6-332h-34.3c-2.8 0-5.1-2.3-5.1-5.1v-34.3c0-2.8 2.3-5.1 5.1-5.1h18.9v3.4h-18.9c-.9 0-1.7.8-1.7 1.7v34.3c0 .9.8 1.7 1.7 1.7h34.3c.9 0 1.7-.8 1.7-1.7v-18.9h3.4v18.9c.1 2.8-2.2 5.1-5.1 5.1"></path>
+                </g>
+            </svg>
+        </a>
+    </div>
 
-    <!-- Откроем попап по клику на кнопку -->
-    <script>
-        $(function() {
-            $("#button-1").on("click", function() {
-                $.goodpopup.getPopup("demo-popup-1").open();
-            });
-            $(document).on("click", "#button-2", function() {
-                $.goodpopup.getPopup("demo-popup-2").open();
-            });
-        });
-    </script>
-
-
-    <h2 class="header2">Удобный API позволяет всё контролировать</h2>
-    <p class="subheader">Подробнее — в документации <a href="https://github.com/eugene-lazarev/jquery-goodpopup/blob/master/README.md" class="link"><span class="link-inner"><span class="link-inner__text">на Гитхабе</span></span></a></p>
+    <h2 class="header2">Handy API makes possible to control everything using<br/>options, methods, callbacks, events and much more</h2>
+    <p class="subheader">Look into it on <a href="https://github.com/eugene-lazarev/jquery-goodpopup/blob/master/README.md" class="link"><span class="link-inner"><span class="link-inner__text">Github</span></span></a></p>
     
     <div class="footer">
-        jQuery-плагин «Хороший попап», автор — Евгений Лазарев.<br/>
-        Актуальная версия: v2.0.0-beta.18
+        Responsive jQuery popup plugin «GoodPopup», handcrafted by Evgeniy Lazarev<br/>
+        Latest release: v2.0.0-beta.18
     </div>
         
 </div></div>
+
+<script>
+    $(function() {
+        function initPopups() {
+            $(window).on("goodpopup-resize", function(event, screen_size) {
+                if (screen_size === "desktop") {
+                    /*
+                    $.goodpopup.getPopup("demo-popup-1").setOptions({
+                        isFullWidth: false
+                    });
+                    */
+                } else if (screen_size === "mobile") {
+                    /*
+                    $.goodpopup.getPopup("demo-popup-1").setOptions({
+                        isFullWidth: true
+                    });
+                    */
+                }
+            });
+        }
+        initPopups();
+
+        function initResizeHandler() {
+            var is_matchmedia_supported = typeof window.matchMedia === "function";
+            var is_mobile;
+
+            $(window).on("resize", function() {
+                if ((is_matchmedia_supported && window.matchMedia("(max-width: 767px)").matches) || (!is_matchmedia_supported && $(document).width() < 768)) {
+                    if (is_mobile) {
+                        return false;
+                    }
+
+                    is_mobile = true;
+
+                    $(window).trigger("goodpopup-resize", "mobile");
+                } else {
+                    if (!is_mobile) {
+                        return false;
+                    }
+
+                    is_mobile = false;
+
+                    $(window).trigger("goodpopup-resize", "desktop");
+                }
+            }).trigger("resize");
+        }
+        initResizeHandler();
+    });
+</script>
 
 </body>
 </html>

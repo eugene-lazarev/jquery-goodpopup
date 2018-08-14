@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Dependencies: jQuery... -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- ...and Handlebars (not required; include only when you use its templates system for popups) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+
+    <!-- GoodPopup: JS & CSS -->
+    <script src="../jquery.goodpopup/js/script.min.js"></script>
+    <link href="../jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Stylize your popup as you like -->
+    <style>
+        .popup {
+            background: #fff;
+            padding: 2em;
+        }
+    </style>
+</head>
+<body>
+<!-- Click the button to open popup -->
+<button type="button">Click me</button>
+
+<!-- Append handlebars-template with unique `id` as content of your popup -->
+<script id="my-popup" type="text/x-handlebars-template">
+    <div class="popup">
+        Hello, I am popup
+    </div>
+</script>
+
+<!-- Listen `click` event on button to open your popup -->
+<script>
+    $(function() {
+        $("button").on("click", function() {
+            $.goodpopup.getPopup("my-popup").open();
+        });
+    });
+</script>
+</body>
+</html>
