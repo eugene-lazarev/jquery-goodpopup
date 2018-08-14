@@ -337,54 +337,5 @@
         
 </div></div>
 
-<script>
-    $(function() {
-        function initPopups() {
-            $(window).on("goodpopup-resize", function(event, screen_size) {
-                if (screen_size === "desktop") {
-                    /*
-                    $.goodpopup.getPopup("demo-popup-1").setOptions({
-                        isFullWidth: false
-                    });
-                    */
-                } else if (screen_size === "mobile") {
-                    /*
-                    $.goodpopup.getPopup("demo-popup-1").setOptions({
-                        isFullWidth: true
-                    });
-                    */
-                }
-            });
-        }
-        initPopups();
-
-        function initResizeHandler() {
-            var is_matchmedia_supported = typeof window.matchMedia === "function";
-            var is_mobile;
-
-            $(window).on("resize", function() {
-                if ((is_matchmedia_supported && window.matchMedia("(max-width: 767px)").matches) || (!is_matchmedia_supported && $(document).width() < 768)) {
-                    if (is_mobile) {
-                        return false;
-                    }
-
-                    is_mobile = true;
-
-                    $(window).trigger("goodpopup-resize", "mobile");
-                } else {
-                    if (!is_mobile) {
-                        return false;
-                    }
-
-                    is_mobile = false;
-
-                    $(window).trigger("goodpopup-resize", "desktop");
-                }
-            }).trigger("resize");
-        }
-        initResizeHandler();
-    });
-</script>
-
 </body>
 </html>
