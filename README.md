@@ -1,27 +1,29 @@
-# Хороший попап
-jQuery-плагин с хорошей разметкой попапа.
+# GoodPopup
+Responsive jQuery-plugin with brilliant outside markup and stable behaviour.  
+No inner markup. Create your inner popup markup as good as you can.
 
-## Демо
+## Demo
 https://eugene-lazarev.github.io/jquery-goodpopup/
 
-## Сборка
+## Build
 `npm install && grunt`
 
-## Установка
+## Quick install
 ```html
-<!-- Зависимости: jQuery и Handlebars -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Dependencies: jQuery... -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>  
+<!-- ...and Handlebars (not required; include only when you use its templates system for popups) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
-<!-- Плагин -->
+<!-- GoodPopup: JS & CSS -->
 <script src="jquery.goodpopup/js/script.min.js"></script>
 <link href="jquery.goodpopup/css/style.min.css" rel="stylesheet" type="text/css"/>
 ```
 
-## Использование
-### Базовый пример
-#### Шаблон Handlebars
-Добавьте в конец страницы шаблон handlebars, содержащий *внутреннюю* разметку попапа, используя уникальный `id`:
+## How to use
+### Basic example
+#### With Handlebars template
+Append handlebars-template with unique `id` as *inner content* of your popup:
 ```html
 <script id="goodpopup1" type="text/x-handlebars-template">
     <div>
@@ -29,82 +31,89 @@ https://eugene-lazarev.github.io/jquery-goodpopup/
     </div>
 </script>
 ```
-В любой момент откройте попап, используя `id` шаблона:
+Get your popup and open it:
 ```javascript
 $.goodpopup.getPopup("goodpopup1").open()
 ```
-А потом закройте:
+And then close it:
 ```javascript
 $.goodpopup.getPopup("goodpopup1").close()
 ```
-#### Шаблон из блока
-Добавьте любому блоку `id`, и вы сможете открывать его содержимое в попапе:
+#### With regular block
+Add `id` attribute to any element in your DOM to be able to open it as popup content:
 ```html
 <div id="goodpopup2">
-    <h1>Hello world</h1>
+    <h1>Hello world — 2</h1>
 </div>
+```
+Get your popup and open it:
+```javascript
+$.goodpopup.getPopup("goodpopup2").open()
+```
+And then close it:
+```javascript
+$.goodpopup.getPopup("goodpopup2").close()
 ```
 
 ### API
-Экземпляр попапа (далее `popup_instance`) можно получить тремя способами:
+GoodPopup instance (`popup_instance` further) could be collected these ways:
 
-1. Взять напрямую по имени: `$.goodpopup.getPopup("goodpopup1")`;
-2. Обратиться к `data-popup` у DOM-элемента handlebars-шаблона (т.е. тега `<script>` с нужным `id`);
-3. Посмотреть в `$.goodpopup.getPopups()`.
+1. Get from global object using its `id`: `$.goodpopup.getPopup("goodpopup1")`;
+2. Get from template‘s DOM-element using `$("#goodpopup1").data("goodpopup")`;
+3. Find it in a list from `$.goodpopup.getPopups()`.
 
-#### Опции
-Могут быть установлены тремя способами:
+#### Options
+Options could be set these ways:
 
-1. Через data-атрибуты у шаблона (т.е. тега `<script>`);
-2. Через метод `popup_instance.setOptions()` (см. ниже);
-3. При ручной инициализации попапа: `$("script[type='text/x-handlebars-template']").goodpopup({})`.
+1. Using data-attributes in template‘s DOM-element (for example, `data-is-detachable="true"` for option `isDetachable`);
+2. Using method `popup_instance.setOptions()` (see below);
+3. When init a template manually (for example, `$("#dynamic-popup").goodpopup({ isDetachable: true })`.
 
 ##### `isDetachable`
-Тип: `boolean`
-По умолчанию `false`
+Type: `boolean`  
+Default value: `false`
 
-Определяет, нужно ли сохранять содержимое попапа при его скрытии (т.е. использовать метод `detach` вместо `remove`).
+Assigns method `detach` instead of `remove` when hiding a popup. This allows to preserve the popup‘s content.
 
 ##### `hasCloseButton`
-Тип: `boolean`
-По умолчанию `true`
+Type: `boolean`  
+Default value: `true`
 
-Определяет, нужна ли этому попапу стандартная кнопка закрытия («крестик»).
-При изменении опции «на лету» кнопка закрытия корректно появляется и исчезает.
+Specifies the displaying of popup‘s close button (cross sign).  
+You can change this option 'on-fly'; the close button will display and hide correctly.
 
 ##### `isOuterClickClosing`
-Тип: `boolean`
-По умолчанию `true`
+Type: `boolean`  
+Default value: `true`
 
-Определяет, нужно ли закрывать попап по клику вне зоны содержимого попапа (в область фона).
+Specifies if popup will be closed when clicking outside its content.
 
 ##### `keyCodeForClosing`
-Тип: `number`, `array`
-По умолчанию `[27]`
+Type: `number`, `array`  
+Default value: `[27]`
 
-Указывает, по нажатию каких клавиш закрывать все открытые попапы. Может быть числом или массивом чисел.
-Значение по умолчанию соответствует кнопке *Esc*.
-Посмотреть коды разных клавиш можно, например, на сайте [keycode.info](http://keycode.info).
-Чтобы оключить закрытие всех открытых попапов по нажатию клавиш, передайте значение `false`.
+Specifies the keys for closing popup. Must be a number or an array of numbers.  
+Default value represents *Esc* button.  
+Please refer to [keycode.info](http://keycode.info) website to find out keys codes.  
+Use `false` value if you need to cancel popup‘s closing from keyboard.
 
 ##### `isPrerendered`
-Тип: `boolean`
-По умолчанию `false`
+Type: `boolean`  
+Default value: `false`
 
-Определяет, нужно ли отрендерить содержимое попапа сразу после загрузки страницы, не дожидаясь, пока попап будет открыт.
-Срабатывает только если эта опция была определена до инициализации плагина, рекомендуется устанавливать через data-атрибут.
+Specifies if the plugin should render the popup‘s content right after plugin‘s initialization (normally, the popup‘s content renders just before opening).  
+Make sense only if this option sets before plugin‘s initialization. Please set it using data-attribute in template‘s DOM-element.
 
 ##### `isIframe`
-Тип: `boolean`
-По умолчанию `false`
+Type: `boolean`  
+Default value: `false`
 
-Определяет, нужно ли оставлять содержимое попапа в DOM после закрытия попапа.
-Особенно полезно использовать, если в содержимом попапа используется iframe. Если не использовать опцию, каждый раз при открытии попапа iframe, находящийся внутри попапа, будет перезагружен (таковы особенности работы браузера при перемещении iframe по DOM).
-
+Specifies if the popup‘s content should stay in DOM after a popup will be closed.  
+Extremely useful if the popup‘s content contains any iframe. If this option is set to `false`, the iframe will be reloaded each time when the popup opens (this is DOM‘s default behaviour for any browser when iframe moves through the DOM).
 
 ##### `forceClosing`
-Тип: `object`
-По умолчанию:
+Type: `object`  
+Default value:
 ```javascript
 {
     click: true,
@@ -112,79 +121,84 @@ $.goodpopup.getPopup("goodpopup1").close()
     button: false
 }
 ```
-Каждое значение определяет, нужно ли по соответствующему событию закрыть все открытые попапы единовременно (`true`), либо же закрыть открытый попап и показать открывавшийся до этого (`false`).
-- `click` — клик вне зоны содержимого попапа (работает при установленной опции `isOuterClickClosing: true`);
-- `keydown` — нажатие клавиш, определённых в опции `keyCodeForClosing`;
-- `button` — клик по «крестику» (работает при установленной опции `hasCloseButton: true`).
+When you opens a popup after popup, plugin creates the queue of popups which was closed but are waiting to be opened after current popup will be closed. „Force-closing“ option closes all popups including current popup and all popups which was closed and which are waiting in the queue. In this case, callback functions will be called for each closing popup in the order from the last to the first closed popup.  
+Set `true` to any value for „force-closing“ after event is happened:
+- `click` — a click outside the popup‘s content (works only if option `isOuterClickClosing` set to `true`);
+- `keydown` — a key which set in `keyCodeForClosing` has pressed;
+- `button` — a click on popup‘s close button (works only if option `hasCloseButton` set to `true`).
 
 
-#### Коллбеки
-Устанавливаются как опции. Вызываются в нужный момент.
+#### Callbacks
+They are set the same way as other options.  
+They are executing just when it is expected.
 
 ##### `callbackBeforeOpen`
-Вызывается перед тем, как попап будет открыт.
+Calling before a popup will be opened.
 
 ##### `callbackAfterOpen`
-Вызывается после того, как попап будет открыт.
+Calling after a popup was opened.
 
 ##### `callbackBeforeClose`
-Вызывается перед тем, как попап будет закрыт.
+Calling before a popup will be closed.
 
 ##### `callbackAfterClose`
-Вызывается после того, как попап будет закрыт.
+Calling after a popup was closed.
 
 
-#### Дополнительные данные
+#### Additional data
 ##### `data`
-Handlebars позволяет использовать объект с данными для дополнительной гибкости при рендеринге шаблона.
-Вы можете в любой момент *до вызова `popup_instance.open()`* передать эти данные, установив опцию `data`. Это обычный объект.
+Handlebars allows to use additional data object to render it inside template.  
+You can set it *before `popup_instance.open()`*. For example:
+```javascript
+$.goodpopup.getPopup("goodpopup1").setOptions({ data: { header: "Hello" } }).open();
+```
 
 
-#### Методы
+#### Methods
 ##### `popup_instance.open()`
-Открыть попап.
+Open a popup.
 
 ##### `popup_instance.close(true)`
-Закрыть попап.
-Аргумент показывает, нужно ли закрыть все открытые попапы единовременно (`true`), либо же закрыть открытый попап и показать открывавшийся до этого (значение по умолчанию, `false`).
+Close a popup.  
+First argument is boolean and specifies „force-closing“ for all popups. If it is set to `false` (default), only this popup will be closed. If it is set to `true`, this popup and all popups in the queue will be closed immediately.
 
 ##### `popup_instance.dequeue()`
-Убрать попап из очереди скрытых попапов.
+Remove this popup from the queue of previous opened popups.
 
 ##### `popup_instance.isRendered()`
-Отрендерен ли попап (независимо от того, показывается он в данный момент или находится в стеке скрытых попапов).
+Returns a boolean that indicates if the popup‘s content is rendered.
 
 ##### `popup_instance.isHidden()`
-Скрыт ли в данный момент попап.
+Returns a boolean that indicates if popup is hidden now.
 
 ##### `popup_instance.setOptions({})`
-Установить новые опции.
+Set new options object.
 
 ##### `popup_instance.getOptions()`
-Возвращает объект со всеми опциями.
+Returns an object with all set options.
 
 ##### `popup_instance.getPopupContent()`
-Возвращает jQuery-объект с разметкой содержимого попапа (всё, что было в шаблоне, положенное в родителя — `<div class="goodpopup-inner-content-element">`).
+Returns a jQuery-object of the popup‘s content appended into a parent element — `<div class="goodpopup-inner-content-element">`.
 
 ##### `popup_instance.getPopupId()`
-Возвращает `id` попапа.
+Returns a string that presents an `id` of this popup.
 
 ##### `popup_instance.getTemplate()`
-Возвращает jQuery-объект блока, из которого создаётся содержимое попапа (handlebars-шаблон или блок с соответствующим `id`).
+Returns a jQuery-object of DOM-element from which this popup‘s content is rendered (DOM-element with suited `id`).
 
 
-### Глобальный объект `$.goodpopup`
-Содержит методы для манипуляции попапами.
+### Global object `$.goodpopup`
+Contains methods to manipulate popups.
 
 #### `$.goodpopup.getPopup(popup_name)`
-Возвращает `popup_instance` от попапа с `popup_name`, соответствующим `id` попапа.
+Returns `popup_instance` for popup with `popup_name`.
 
 #### `$.goodpopup.getPopups()`
-Возвращает объект со всеми попапами (не включая попапы, созданные из блоков и до сих пор не показывавшиеся).
+Returns an array with all available popups (excluding popups that will be created from non-handlebars blocks which was never opened).
 
 #### `$.goodpopup.getQueue()`
-Возвращает массив с очередью показанных ранее, а сейчас скрытых попапов. Удалить попап из очереди можно, воспользовавшись методом `popup_instance.dequeue()`.
+Returns an array of the queue containing previously opened popups which had beed hidden because a new popup was opened. You can remove any popup from this queue using method `popup_instance.dequeue()`.
 
 
-## Лицензия
+## License
 [MIT License](LICENSE.md)
