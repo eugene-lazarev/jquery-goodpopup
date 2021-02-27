@@ -1,7 +1,7 @@
 (function($) {
     "use strict";
 
-    var version = "2.0.0-beta.19";
+    var version = "2.0.0-beta.20";
 
     var plugin_suffix = "goodpopup";
 
