@@ -75,13 +75,6 @@ Default value: `false`
 
 Assigns method `detach` instead of `remove` when hiding a popup. This allows to preserve the popup‘s content.
 
-##### `hasCloseButton`
-Type: `boolean`  
-Default value: `true`
-
-Specifies the displaying of popup‘s close button (cross sign).  
-You can change this option 'on-fly'; the close button will display and hide correctly.
-
 ##### `isOuterClickClosing`
 Type: `boolean`  
 Default value: `true`
@@ -94,8 +87,14 @@ Default value: `[27]`
 
 Specifies the keys for closing popup. Must be a number or an array of numbers.  
 Default value represents *Esc* button.  
-Please refer to [keycode.info](http://keycode.info) website to find out keys codes.  
+Please refer to [keycode.info](https://keycode.info) website to find out keys codes.
 Use `false` value if you need to cancel popup‘s closing from keyboard.
+
+##### `closeButton`
+Type: `string`
+Default value: `""`
+
+Specifies the [jQuery-style selector](https://api.jquery.com/category/selectors/) of item(s), click on which triggers popup’s closing.
 
 ##### `isPrerendered`
 Type: `boolean`  
@@ -125,7 +124,7 @@ When you opens a popup after popup, plugin creates the queue of popups which was
 Set `true` to any value for „force-closing“ after event is happened:
 - `click` — a click outside the popup‘s content (works only if option `isOuterClickClosing` set to `true`);
 - `keydown` — a key which set in `keyCodeForClosing` has pressed;
-- `button` — a click on popup‘s close button (works only if option `hasCloseButton` set to `true`).
+- `button` — a click on popup‘s close button (works only for elements matching `closeButton` option selector).
 
 
 #### Callbacks
@@ -150,7 +149,17 @@ Calling after a popup was closed.
 Handlebars allows to use additional data object to render it inside template.  
 You can set it *before `popup_instance.open()`*. For example:
 ```javascript
-$.goodpopup.getPopup("goodpopup1").setOptions({ data: { header: "Hello" } }).open();
+$.goodpopup.getPopup("goodpopup1").setOptions({ data: { header: "Hello world" } }).open();
+```
+It other way, you can use special literals in regular HTML, which you want to use as popup’s template.
+Any literals matching pattern `${}` will be rendered with same data’s item. For example:
+```html
+<div id="goodpopup3">
+    <h1>${header}</h1>
+</div>
+```
+```javascript
+$.goodpopup.getPopup("goodpopup3").setOptions({ data: { header: "Hello world — 3" } }).open();
 ```
 
 

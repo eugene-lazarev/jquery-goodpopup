@@ -79,20 +79,15 @@ html.noscroll body {
 .goodpopup-inner-content-element {
     display: inline-block;
     vertical-align: top;
-    padding: 1em;
+    max-width: 100%;
     position: relative;
     opacity: 1;
     transform: scale(1);
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
-.goodpopup-inner-content-element_withclosebutton {
-    padding-right: 3.5em;
-    padding-left: 1.5em;
-}
 .goodpopup-inner-content-element_fullwidth {
-    padding-right: 0;
-    padding-left: 0;
     display: block;
+    max-width: none;
 }
 .goodpopup-inner-content-element_hidden {
     opacity: 0;
@@ -114,36 +109,4 @@ html.noscroll body {
     opacity: 0;
     transform: scale(0.7);
     transition: opacity 0.25s ease, transform 0.25s ease;
-}
-.goodpopup-close {
-    position: absolute;
-    top: 1em;
-    right: 1em;
-    width: 1.5em;
-    cursor: pointer;
-    line-height: 1;
-}
-.goodpopup-inner-content-element_fullwidth .goodpopup-close {
-    top: 1.5em;
-    right: 0.5em;
-}
-.goodpopup-close-svg {
-    vertical-align: top;
-    width: 100%;
-}
-.goodpopup-close-svg__path {
-    fill: #fff;
-    transition: fill 0.25s ease;
-}
-.goodpopup-inner-content-element_fullwidth .goodpopup-close-svg__path {
-    fill: #000;
-    fill: currentColor;
-}
-.goodpopup-close:hover .goodpopup-close-svg__path {
-    fill: #ff4500;
-    transition: none;
-}
-.goodpopup-close__png {
-    vertical-align: top;
-    width: 100%;
 }
