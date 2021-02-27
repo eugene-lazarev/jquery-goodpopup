@@ -91,7 +91,7 @@ Please refer to [keycode.info](https://keycode.info) website to find out keys co
 Use `false` value if you need to cancel popup‘s closing from keyboard.
 
 ##### `closeButton`
-Type: `string`
+Type: `string`  
 Default value: `""`
 
 Specifies the [jQuery-style selector](https://api.jquery.com/category/selectors/) of item(s), click on which triggers popup’s closing.
